@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Test Spring Boot ────────────────────────────────────────────────────────
+  test-backend:
+    name: Test Spring Boot
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend   # ← adjust to your Spring folder name
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: testdb
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpass
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Run tests
+        env:
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/testdb
+          SPRING_DATASOURCE_USERNAME: testuser
+          SPRING_DATASOURCE_PASSWORD: testpass
+        run: mvn test -q
+
+  # ── Test React ──────────────────────────────────────────────────────────────
+  test-frontend:
+    name: Test React
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend  # ← adjust to your React folder name
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test -- --watchAll=false --passWithNoTests
+
+      - name: Build
+        run: npm run build
+        env:
+          REACT_APP_API_URL: http://localhost:8080

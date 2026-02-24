@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: spring-backend
+    runtime: docker
+    # Path to your Spring Boot app inside the monorepo
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false          # set manually in Render dashboard
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: SPRING_JPA_HIBERNATE_DDL_AUTO
+        value: update
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
