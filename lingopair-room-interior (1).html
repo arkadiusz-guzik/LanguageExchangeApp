@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LingoPair — Room: English for Developers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --fire:       #E8420A;
+  --fire-2:     #FF6535;
+  --fire-glow:  rgba(232,66,10,0.15);
+  --fire-soft:  rgba(232,66,10,0.08);
+  --page:       #F8F5F2;
+  --white:      #FFFFFF;
+  --ink:        #1A1208;
+  --ink-2:      #3B2A1E;
+  --dim:        #8A7368;
+  --dim-2:      #C4B8B0;
+  --rule:       #E8E0DA;
+  --warm:       #F2EDE8;
+  --green:      #15803D;
+  --green-bg:   rgba(21,128,61,0.09);
+  --green-glow: rgba(21,128,61,0.18);
+  --amber:      #B45309;
+  --amber-bg:   rgba(180,83,9,0.09);
+  --blue:       #1D4ED8;
+  --blue-bg:    rgba(29,78,216,0.08);
+  --red:        #DC2626;
+  --red-bg:     rgba(220,38,38,0.08);
+  --sp:    cubic-bezier(0.22, 1, 0.36, 1);
+  --ease:  cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce:cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html, body { height: 100%; overflow: hidden; font-size: 15px; }
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--page); color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  display: flex; flex-direction: column;
+}
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+
+/* ══════════════════════════
+   NAV
+══════════════════════════ */
+.nav {
+  flex-shrink: 0; height: 52px;
+  display: flex; align-items: center; gap: 0;
+  padding: 0 20px;
+  background: rgba(248,245,242,0.97);
+  backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--rule); z-index: 100;
+}
+.nav-logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 19px; font-weight: 400; font-style: italic;
+  color: var(--ink); text-decoration: none;
+  letter-spacing: -0.3px; margin-right: 14px; flex-shrink: 0;
+}
+.nav-logo span { color: var(--fire); font-style: normal; }
+.nav-back {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 8px; border: none;
+  background: transparent; font-family: 'Sora', sans-serif;
+  font-size: 12.5px; color: var(--dim); cursor: pointer;
+  transition: background 0.13s, color 0.13s; flex-shrink: 0;
+}
+.nav-back:hover { background: var(--warm); color: var(--ink); }
+.nav-divider { width: 1px; height: 18px; background: var(--rule); margin: 0 8px; flex-shrink: 0; }
+.nav-room-meta { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+.nav-room-title { font-size: 13.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-room-sub   { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--dim); margin-top: 1px; }
+.live-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 10px; font-weight: 600; letter-spacing: 0.4px;
+  text-transform: uppercase; padding: 2px 8px; border-radius: 20px;
+}
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pdot 1.9s ease-in-out infinite; }
+@keyframes pdot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.65)} }
+.nav-timer { font-size: 11.5px; font-weight: 600; color: var(--dim); font-variant-numeric: tabular-nums; letter-spacing: -0.2px; }
+.nav-r { display: flex; align-items: center; gap: 5px; margin-left: auto; flex-shrink: 0; }
+.nav-icon-btn {
+  width: 30px; height: 30px; border-radius: 8px; border: none;
+  background: transparent; cursor: pointer; color: var(--dim);
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.13s, color 0.13s;
+}
+.nav-icon-btn:hover { background: var(--warm); color: var(--ink); }
+.nav-av {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: linear-gradient(135deg,var(--fire),#FF7043);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: white; cursor: pointer;
+}
+
+/* ══════════════════════════
+   PERSPECTIVE BAR
+══════════════════════════ */
+.persp-bar {
+  flex-shrink: 0; display: flex; align-items: center;
+  padding: 0 20px; background: white; border-bottom: 1px solid var(--rule);
+}
+.persp-hint {
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--dim-2); margin-right: 14px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.persp-tab {
+  display: flex; align-items: center; gap: 7px;
+  padding: 10px 18px; border: none; background: transparent;
+  font-family: 'Sora', sans-serif; font-size: 12.5px;
+  font-weight: 500; color: var(--dim); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.14s, border-color 0.14s; white-space: nowrap;
+}
+.persp-tab:hover { color: var(--ink); }
+.persp-tab.on { color: var(--ink); border-bottom-color: var(--fire); }
+.pdot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.pdot-l { background: var(--dim-2); }
+.pdot-s { background: var(--green); }
+.pdot-h { background: var(--fire); }
+
+/* ══════════════════════════
+   ROOM LAYOUT
+══════════════════════════ */
+.room-wrap { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+/* ── STAGE (left) ── */
+.stage {
+  flex: 1; min-width: 0; display: flex; flex-direction: column;
+  background: var(--page); border-right: 1px solid var(--rule); overflow: hidden;
+}
+
+/* stage header */
+.stage-head {
+  flex-shrink: 0; background: white; border-bottom: 1px solid var(--rule);
+  padding: 14px 20px 12px;
+}
+.stage-head-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.stage-head-left { flex: 1; min-width: 0; }
+.stage-tags { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+.tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: -0.05px;
+  padding: 2px 7px; border-radius: 5px; line-height: 1.4; white-space: nowrap;
+}
+.tag.teacher { background: var(--green-bg); color: var(--green); }
+.tag.lang    { background: var(--warm); color: var(--dim); border: 1px solid var(--rule); font-size: 10px; }
+.tag.lang .flag { font-size: 12px; }
+.tag.level   { background: var(--blue-bg); color: var(--blue); font-weight: 600; }
+.tag.topic   { background: var(--blue-bg); color: var(--blue); }
+
+.stage-title {
+  font-family: 'Fraunces', serif; font-size: 16px; font-weight: 500;
+  color: var(--ink); letter-spacing: -0.3px; line-height: 1.25; margin-bottom: 2px;
+}
+.stage-desc { font-size: 11.5px; color: var(--dim); line-height: 1.5; }
+
+.stage-pax { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.pax-track { width: 72px; height: 4px; border-radius: 4px; background: var(--rule); overflow: hidden; }
+.pax-fill  { height: 100%; border-radius: 4px; background: var(--amber); }
+.pax-lbl   { font-size: 11px; color: var(--dim-2); white-space: nowrap; }
+
+/* speak-request banner */
+.speak-banner {
+  flex-shrink: 0; display: none;
+  margin: 10px 20px 0;
+  align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 12px;
+  background: var(--fire-soft); border: 1px solid rgba(232,66,10,0.18);
+  animation: slideIn 0.28s var(--sp);
+}
+@keyframes slideIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.sb-icon  { font-size: 18px; flex-shrink: 0; }
+.sb-body  { flex: 1; }
+.sb-title { font-size: 12.5px; font-weight: 600; color: var(--fire); letter-spacing: -0.2px; }
+.sb-sub   { font-size: 11px; color: var(--dim); margin-top: 1px; }
+.sb-cancel {
+  font-size: 11.5px; font-weight: 500; color: var(--fire);
+  background: none; border: none; cursor: pointer; padding: 0;
+  text-decoration: underline; text-underline-offset: 2px; opacity: 0.7;
+}
+.sb-cancel:hover { opacity: 1; }
+
+/* orb grid */
+.orb-grid {
+  flex: 1; overflow-y: auto; padding: 18px 20px;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  gap: 12px; align-content: start;
+}
+
+.orb-card {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  padding: 18px 10px 14px; background: white;
+  border: 1.5px solid var(--rule); border-radius: 20px;
+  transition: border-color 0.25s var(--sp), box-shadow 0.25s var(--sp);
+  animation: cardIn 0.38s var(--sp) both; cursor: default;
+}
+.orb-card.speaking {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-glow), 0 4px 16px rgba(21,128,61,0.1);
+}
+.orb-card.self-card {
+  border-color: rgba(232,66,10,0.45);
+  box-shadow: 0 0 0 3px var(--fire-glow);
+  background: var(--fire-soft);
+}
+.orb-card.self-host {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px var(--green-glow), 0 4px 16px rgba(21,128,61,0.1);
+  background: var(--green-bg);
+}
+.orb-card.dim-card { opacity: 0.65; }
+@keyframes cardIn { from{opacity:0;transform:scale(0.88) translateY(10px)} to{opacity:1;transform:scale(1) translateY(0)} }
+.orb-card:nth-child(1){animation-delay:.04s}.orb-card:nth-child(2){animation-delay:.09s}
+.orb-card:nth-child(3){animation-delay:.14s}.orb-card:nth-child(4){animation-delay:.19s}
+.orb-card:nth-child(5){animation-delay:.24s}.orb-card:nth-child(6){animation-delay:.30s}
+
+/* orb circle */
+.orb-circle {
+  position: relative; width: 66px; height: 66px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; font-weight: 700; color: white;
+  font-family: 'Sora', sans-serif; letter-spacing: -0.5px;
+  margin-bottom: 10px; flex-shrink: 0;
+}
+.orb-circle::after {
+  content:''; position:absolute; inset:0; border-radius:50%;
+  background: linear-gradient(135deg,rgba(255,255,255,0.22) 0%,transparent 55%);
+}
+
+/* speaking ring */
+.orb-ring {
+  position: absolute; inset: -5px; border-radius: 50%;
+  border: 2.5px solid var(--green); opacity: 0;
+}
+.speaking .orb-ring, .self-host .orb-ring {
+  opacity: 1; animation: ringPulse 1.6s ease-in-out infinite;
+}
+@keyframes ringPulse { 0%{transform:scale(0.9);opacity:0.8} 50%{transform:scale(1.07);opacity:0.3} 100%{transform:scale(0.9);opacity:0.8} }
+
+/* waveform inside orb */
+.orb-waves {
+  position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: flex-end; gap: 2px; height: 12px;
+  opacity: 0; transition: opacity 0.18s; pointer-events: none;
+}
+.speaking .orb-waves, .self-host .orb-waves { opacity: 1; }
+.ow { width: 2.5px; border-radius: 2px; background: rgba(255,255,255,0.82); transform-origin: bottom; }
+.ow:nth-child(1){height:3px; animation:owa 0.78s 0.00s ease-in-out infinite}
+.ow:nth-child(2){height:9px; animation:owa 0.78s 0.10s ease-in-out infinite}
+.ow:nth-child(3){height:5px; animation:owa 0.78s 0.20s ease-in-out infinite}
+.ow:nth-child(4){height:11px;animation:owa 0.78s 0.15s ease-in-out infinite}
+.ow:nth-child(5){height:4px; animation:owa 0.78s 0.05s ease-in-out infinite}
+@keyframes owa { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.22)} }
+
+/* mute badge */
+.orb-mute {
+  position: absolute; bottom: 0; right: 0;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--red-bg); border: 2px solid white;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* hand raised badge */
+.orb-hand {
+  position: absolute; top: -4px; right: -4px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #fef08a; border: 2px solid #fbbf24;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; animation: handPop 0.3s var(--bounce);
+}
+@keyframes handPop { from{transform:scale(0)} to{transform:scale(1)} }
+
+.orb-name {
+  font-size: 12px; font-weight: 600; color: var(--ink);
+  text-align: center; letter-spacing: -0.15px; margin-bottom: 1px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.orb-sub {
+  font-size: 9.5px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: 0.4px; color: var(--dim-2); text-align: center;
+}
+
+/* host card controls */
+.host-orb-ctrl {
+  display: none; position: absolute; top: 7px; left: 7px; gap: 3px;
+}
+.hoc {
+  width: 22px; height: 22px; border-radius: 6px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; cursor: pointer; transition: all 0.12s;
+}
+.hoc-mute { background: var(--amber-bg); color: var(--amber); }
+.hoc-mute:hover { background: var(--amber); color: white; }
+.hoc-kick { background: var(--red-bg); color: var(--red); }
+.hoc-kick:hover { background: var(--red); color: white; }
+.hoc-approve { background: var(--green-bg); color: var(--green); }
+.hoc-approve:hover { background: var(--green); color: white; }
+
+/* listeners strip */
+.listeners-strip {
+  flex-shrink: 0; padding: 9px 20px 11px;
+  border-top: 1px solid var(--rule); background: white;
+}
+.lst-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.6px; color: var(--dim-2); margin-bottom: 7px;
+  display: flex; align-items: center; gap: 7px;
+}
+.lst-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.lst-av {
+  width: 26px; height: 26px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; font-weight: 700; color: white;
+  transition: transform 0.14s var(--sp); cursor: default; position: relative;
+}
+.lst-av:hover { transform: scale(1.12); }
+.lst-you::after {
+  content:''; position:absolute; bottom:-2px; right:-2px;
+  width:8px; height:8px; border-radius:50%;
+  background: var(--green); border: 1.5px solid white;
+}
+.lst-more {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--warm); border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; color: var(--dim);
+}
+
+/* controls bar */
+.controls {
+  flex-shrink: 0; padding: 12px 20px;
+  border-top: 1px solid var(--rule); background: white;
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* mic button */
+.mic-btn {
+  width: 50px; height: 50px; border-radius: 15px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; position: relative;
+  transition: all 0.2s var(--sp);
+}
+.mic-on  { background: var(--green); box-shadow: 0 4px 16px rgba(21,128,61,0.35); }
+.mic-on:hover  { background: #126B32; transform: scale(1.06); }
+.mic-off { background: var(--warm); border: 1.5px solid var(--rule); }
+.mic-off:hover { background: white; border-color: rgba(26,18,8,0.2); }
+.mic-locked { background: var(--warm); border: 1.5px dashed var(--dim-2); cursor: not-allowed; opacity: 0.5; }
+.mic-slash {
+  position: absolute; width: 2px; height: 30px;
+  background: var(--red); border-radius: 2px; transform: rotate(45deg);
+  pointer-events: none;
+}
+
+/* small ctrl buttons */
+.cbtn {
+  display: flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 14px; border-radius: 11px;
+  border: 1.5px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif; font-size: 12.5px;
+  font-weight: 500; color: var(--dim); cursor: pointer;
+  transition: all 0.14s var(--sp); white-space: nowrap; flex-shrink: 0;
+}
+.cbtn:hover { background: var(--warm); color: var(--ink); border-color: rgba(26,18,8,0.18); }
+.cbtn.active { background: var(--fire-soft); color: var(--fire); border-color: rgba(232,66,10,0.28); }
+.cbtn.hand   { }
+.cbtn.hand:hover { background: #fef9c3; border-color: #fde047; color: #92400e; }
+.cbtn.hand.raised { background: #fef9c3; border-color: #fde047; color: #92400e; font-weight: 600; }
+.cbtn.danger { color: var(--red); border-color: rgba(220,38,38,0.22); }
+.cbtn.danger:hover { background: var(--red-bg); border-color: rgba(220,38,38,0.4); }
+.hand-icon { display: inline-block; }
+.cbtn.raised .hand-icon { animation: handWave 0.5s var(--bounce) infinite alternate; }
+@keyframes handWave { from{transform:rotate(-10deg)} to{transform:rotate(12deg)} }
+
+.c-spacer { flex: 1; }
+
+/* volume */
+.vol-wrap { display: flex; align-items: center; gap: 6px; }
+.vol-icon { font-size: 13px; color: var(--dim); }
+input[type=range].vol-slider {
+  -webkit-appearance: none; appearance: none;
+  width: 70px; height: 4px; border-radius: 4px;
+  background: var(--rule); outline: none; cursor: pointer;
+}
+input[type=range].vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 13px; height: 13px; border-radius: 50%;
+  background: var(--ink); cursor: pointer; transition: transform 0.13s var(--sp);
+}
+input[type=range].vol-slider::-webkit-slider-thumb:hover { transform: scale(1.25); }
+
+/* leave / end */
+.leave-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 16px; border-radius: 11px;
+  border: 1.5px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif; font-size: 12.5px;
+  font-weight: 500; color: var(--dim); cursor: pointer;
+  transition: all 0.14s; white-space: nowrap;
+}
+.leave-btn:hover { background: var(--warm); color: var(--ink); border-color: rgba(26,18,8,0.2); }
+.end-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 40px; padding: 0 16px; border-radius: 11px;
+  background: var(--red-bg); border: 1.5px solid rgba(220,38,38,0.22);
+  font-family: 'Sora', sans-serif; font-size: 12.5px;
+  font-weight: 600; color: var(--red); cursor: pointer;
+  transition: all 0.16s; white-space: nowrap;
+}
+.end-btn:hover { background: var(--red); color: white; border-color: var(--red); box-shadow: 0 4px 14px rgba(220,38,38,0.3); }
+
+/* control sets - shown/hidden by body class */
+.cset { display: none; width: 100%; align-items: center; gap: 8px; }
+body.listener .cset-listener,
+body.speaker  .cset-speaker,
+body.host     .cset-host     { display: flex; }
+
+/* ══════════════════════════
+   RIGHT PANEL
+══════════════════════════ */
+.panel {
+  width: 318px; flex-shrink: 0; display: flex; flex-direction: column;
+  background: white; overflow: hidden;
+}
+.panel-tabs { flex-shrink: 0; display: flex; border-bottom: 1px solid var(--rule); }
+.ptab {
+  flex: 1; padding: 11px 6px; border: none; background: transparent;
+  font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500;
+  color: var(--dim); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: color 0.13s, border-color 0.13s;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+}
+.ptab:hover { color: var(--ink); }
+.ptab.on { color: var(--ink); border-bottom-color: var(--fire); }
+.ptab-badge {
+  background: var(--fire); color: white; font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: 10px; min-width: 16px; text-align: center;
+}
+.ptab-badge.amber { background: var(--amber); }
+
+/* pane system */
+.panel-body { flex: 1; overflow: hidden; position: relative; }
+.ppane {
+  position: absolute; inset: 0; overflow-y: auto;
+  display: flex; flex-direction: column;
+  opacity: 0; pointer-events: none; transition: opacity 0.16s var(--ease);
+}
+.ppane.on { opacity: 1; pointer-events: auto; }
+
+/* ── Chat ── */
+.chat-scroll { flex: 1; padding: 14px; display: flex; flex-direction: column; gap: 12px; }
+.sys-msg { text-align: center; font-size: 10px; color: var(--dim-2); padding: 2px 0; }
+
+.cmsg { display: flex; gap: 8px; align-items: flex-start; }
+.cav {
+  width: 26px; height: 26px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9.5px; font-weight: 700; color: white; margin-top: 1px;
+}
+.cbody { flex: 1; min-width: 0; }
+.cmeta { display: flex; align-items: baseline; gap: 6px; margin-bottom: 3px; }
+.cname { font-size: 11.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; }
+.cname.h { color: var(--green); }
+.cname.y { color: var(--fire); }
+.ctime { font-size: 10px; color: var(--dim-2); }
+.ctext { font-size: 12.5px; color: var(--ink-2); line-height: 1.55; letter-spacing: -0.1px; word-break: break-word; }
+
+.correction {
+  margin-top: 5px; padding: 7px 10px;
+  border-left: 2px solid var(--fire); border-radius: 0 9px 9px 0;
+  background: var(--fire-soft);
+}
+.corr-lbl { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--fire); margin-bottom: 3px; }
+.corr-txt { font-size: 12px; color: var(--ink-2); line-height: 1.5; }
+
+.reacts { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 5px; }
+.react {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 7px; border-radius: 20px;
+  background: var(--warm); border: 1px solid var(--rule);
+  font-size: 11px; cursor: pointer; transition: all 0.12s;
+}
+.react:hover { background: white; border-color: rgba(26,18,8,0.18); }
+.react.mine { background: var(--blue-bg); border-color: rgba(29,78,216,0.2); }
+
+.chat-foot { flex-shrink: 0; padding: 10px 12px; border-top: 1px solid var(--rule); }
+.emoji-strip { display: flex; align-items: center; gap: 2px; margin-bottom: 7px; }
+.emoji-lbl { font-size: 10px; font-weight: 600; color: var(--dim-2); text-transform: uppercase; letter-spacing: 0.5px; margin-right: 4px; }
+.emoji-q {
+  width: 28px; height: 28px; border: none; background: transparent;
+  border-radius: 7px; font-size: 15px; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: background 0.12s, transform 0.14s var(--bounce);
+}
+.emoji-q:hover { background: var(--warm); transform: scale(1.2); }
+.chat-input-row { display: flex; align-items: flex-end; gap: 7px; }
+.chat-inp {
+  flex: 1; border: 1px solid var(--rule); border-radius: 11px;
+  background: var(--warm); padding: 8px 12px;
+  font-family: 'Sora', sans-serif; font-size: 12.5px; color: var(--ink);
+  outline: none; resize: none; line-height: 1.5;
+  min-height: 36px; max-height: 88px;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.chat-inp:focus { border-color: rgba(232,66,10,0.35); background: white; box-shadow: 0 0 0 3px var(--fire-soft); }
+.chat-inp::placeholder { color: var(--dim-2); }
+.send-btn {
+  width: 36px; height: 36px; border-radius: 10px; border: none;
+  background: var(--fire); display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(232,66,10,0.28);
+  transition: all 0.18s var(--sp);
+}
+.send-btn:hover { background: #CC3A08; transform: scale(1.08); }
+
+/* ── People ── */
+.plist { flex: 1; padding: 8px 10px; }
+.psect {
+  font-size: 9.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.5px; color: var(--dim-2);
+  padding: 10px 4px 6px; display: flex; align-items: center; gap: 8px;
+}
+.psect::after { content:''; flex:1; height:1px; background:var(--rule); }
+.prow {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 5px; border-radius: 10px; transition: background 0.12s;
+}
+.prow:hover { background: var(--warm); }
+.pav {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 700; color: white; flex-shrink: 0;
+  position: relative;
+}
+.pring {
+  position: absolute; inset: -3px; border-radius: 13px;
+  border: 2px solid var(--green); opacity: 0;
+}
+.prow.spk .pring { opacity: 1; animation: ringPulse 1.6s ease-in-out infinite; }
+.pinfo { flex: 1; min-width: 0; }
+.pname { font-size: 12.5px; font-weight: 500; color: var(--ink); letter-spacing: -0.15px; line-height: 1.2; }
+.pname.hn { color: var(--green); }
+.pname.yn { color: var(--fire); }
+.psub { font-size: 10.5px; color: var(--dim-2); margin-top: 1px; }
+.picons { display: flex; align-items: center; gap: 3px; }
+.picon { font-size: 12px; opacity: 0.5; }
+.picon.act { opacity: 1; }
+.picon.mut { color: var(--red); opacity: 0.65; }
+.phost-btns { display: none; align-items: center; gap: 3px; }
+.phb {
+  width: 24px; height: 24px; border-radius: 6px; border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; cursor: pointer; transition: all 0.12s;
+  background: var(--warm); color: var(--dim);
+}
+.phb:hover { background: var(--rule); color: var(--ink); }
+.phb.kick:hover { background: var(--red-bg); color: var(--red); }
+.phb.ok { background: var(--green-bg); color: var(--green); }
+.phb.ok:hover { background: var(--green); color: white; }
+
+/* ── Hand-raise queue ── */
+.hr-pane { flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.hr-hint { font-size: 11px; color: var(--dim-2); line-height: 1.6; padding: 0 4px; margin-bottom: 4px; }
+.hr-card {
+  display: flex; align-items: center; gap: 9px;
+  padding: 10px; border-radius: 12px;
+  background: #fef9c3; border: 1px solid #fde047;
+  animation: cardIn 0.3s var(--sp);
+}
+.hr-av {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 700; color: white; flex-shrink: 0;
+}
+.hr-info { flex: 1; min-width: 0; }
+.hr-name { font-size: 12.5px; font-weight: 600; color: var(--ink); }
+.hr-sub  { font-size: 10.5px; color: var(--dim); margin-top: 1px; }
+.hr-acts { display: flex; gap: 5px; }
+.hr-yes {
+  padding: 5px 12px; border-radius: 8px;
+  background: var(--green); color: white; border: none;
+  font-family: 'Sora', sans-serif; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; transition: all 0.14s var(--sp);
+}
+.hr-yes:hover { background: #126B32; transform: scale(1.04); }
+.hr-no {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: white; border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; cursor: pointer; color: var(--dim); transition: all 0.12s;
+}
+.hr-no:hover { background: var(--red-bg); color: var(--red); border-color: rgba(220,38,38,0.3); }
+.hr-empty {
+  flex: 1; display: none; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px; color: var(--dim-2);
+  text-align: center; padding: 30px 20px; font-size: 12.5px;
+}
+.hr-empty-ico { font-size: 30px; opacity: 0.35; }
+
+/* ══════════════════════════
+   PERSPECTIVE DRIVEN VISIBILITY
+   Apply to body: .listener / .speaker / .host
+══════════════════════════ */
+
+/* self orb on stage */
+#selfOrb { display: none; }
+body.speaker #selfOrb,
+body.host    #selfOrb { display: flex; }
+
+/* listener "you" in listener strip */
+#youLstAv { display: none; }
+body.listener #youLstAv { display: flex; }
+
+/* you in people list (speaker/host = participant row) */
+#youParticipantRow { display: none; }
+body.speaker #youParticipantRow,
+body.host    #youParticipantRow { display: flex; }
+
+/* you in people list (listener) */
+#youListenerRow { display: none; }
+body.listener #youListenerRow { display: flex; }
+
+/* host orb controls */
+.host-orb-ctrl { display: none; }
+body.host .host-orb-ctrl { display: flex; }
+
+/* people list host actions */
+.phost-btns { display: none; }
+body.host .phost-btns { display: flex; }
+
+/* hand-raises tab */
+#hrTab { display: none; }
+body.host #hrTab { display: flex; }
+
+/* ══════════════════════════
+   TOAST + FLOATING EMOJI
+══════════════════════════ */
+.toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: var(--ink); color: white; padding: 9px 18px; border-radius: 12px;
+  font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 500;
+  box-shadow: 0 8px 28px rgba(26,18,8,0.2); pointer-events: none; z-index: 999;
+  white-space: nowrap; animation: toastIn 0.22s var(--sp);
+}
+@keyframes toastIn { from{opacity:0;transform:translateX(-50%) translateY(10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+
+.float-emoji {
+  position: fixed; pointer-events: none; font-size: 26px;
+  animation: floatUp 1.5s var(--sp) forwards;
+}
+@keyframes floatUp { 0%{opacity:1;transform:translateY(0) scale(1)} 80%{opacity:0.6;transform:translateY(-90px) scale(1.2)} 100%{opacity:0;transform:translateY(-130px) scale(0.8)} }
+</style>
+</head>
+<body class="speaker">
+
+<!-- ══════ NAV ══════ -->
+<nav class="nav">
+  <a class="nav-logo" href="#">Lingo<span>Pair</span></a>
+  <button class="nav-back" onclick="T('← Rooms')">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Rooms
+  </button>
+  <div class="nav-divider"></div>
+  <div class="nav-room-meta">
+    <div class="nav-room-title">English for Developers — Live Q&A</div>
+    <div class="nav-room-sub">
+      <span class="live-pill"><span class="live-dot"></span> Live</span>
+      <span>·</span>
+      <span class="nav-timer" id="timerEl">00:00</span>
+      <span>·</span>
+      <span>9 / 12 joined</span>
+    </div>
+  </div>
+  <div class="nav-r">
+    <button class="nav-icon-btn" title="Settings" onclick="T('⚙ Room settings')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    </button>
+    <div class="nav-av">YM</div>
+  </div>
+</nav>
+
+<!-- ══════ PERSPECTIVE SWITCHER ══════ -->
+<div class="persp-bar">
+  <span class="persp-hint">View as</span>
+  <button class="persp-tab" id="ptab-listener" onclick="setMode('listener')">
+    <span class="pdot pdot-l"></span> 👂 Listener
+  </button>
+  <button class="persp-tab on" id="ptab-speaker" onclick="setMode('speaker')">
+    <span class="pdot pdot-s"></span> 🎙 Participant
+  </button>
+  <button class="persp-tab" id="ptab-host" onclick="setMode('host')">
+    <span class="pdot pdot-h"></span> 🎓 Host
+  </button>
+</div>
+
+<!-- ══════ ROOM ══════ -->
+<div class="room-wrap">
+
+  <!-- ╔═════ STAGE ═════╗ -->
+  <div class="stage">
+
+    <!-- Header -->
+    <div class="stage-head">
+      <div class="stage-head-row">
+        <div class="stage-head-left">
+          <div class="stage-tags">
+            <span class="tag teacher">🎓 Teacher</span>
+            <span class="tag lang"><span class="flag">🇬🇧</span> English</span>
+            <span class="tag lang"><span class="flag">🇩🇪</span> German</span>
+            <span class="tag level">B2/C1</span>
+            <span class="tag topic">💻 Tech & IT</span>
+          </div>
+          <div class="stage-title">English for Developers — Live Q&A</div>
+          <div class="stage-desc">Technical vocabulary, presentations, remote meeting English. Certified B2/C1 coach hosting.</div>
+        </div>
+        <div class="stage-pax">
+          <div class="pax-track"><div class="pax-fill" style="width:75%"></div></div>
+          <span class="pax-lbl">9 / 12</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Speak-request banner (listener only, when hand raised) -->
+    <div id="speakBanner" class="speak-banner">
+      <span class="sb-icon">✋</span>
+      <div class="sb-body">
+        <div class="sb-title">Request sent — waiting for host</div>
+        <div class="sb-sub">The host will let you in when it's your turn</div>
+      </div>
+      <button class="sb-cancel" onclick="cancelHand()">Cancel</button>
+    </div>
+
+    <!-- Orb grid -->
+    <div class="orb-grid" id="orbGrid">
+
+      <!-- HOST — always visible, speaking -->
+      <div class="orb-card speaking" id="hostOrb">
+        <div class="orb-circle" style="background:linear-gradient(135deg,#15803D,#22C55E)">
+          A
+          <div class="orb-ring"></div>
+          <div class="orb-waves"><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div></div>
+        </div>
+        <div class="orb-name" style="color:var(--green)">Anna K.</div>
+        <div class="orb-sub" style="color:var(--green)">🎓 HOST</div>
+      </div>
+
+      <!-- Marcus (speaking) -->
+      <div class="orb-card speaking" id="marcusOrb">
+        <div class="host-orb-ctrl" style="gap:3px">
+          <button class="hoc hoc-mute" title="Mute" onclick="hostMute(this,'Marcus T.')">🔇</button>
+          <button class="hoc hoc-kick" title="Remove" onclick="hostKick(this,'Marcus T.')">✕</button>
+        </div>
+        <div class="orb-circle" style="background:linear-gradient(135deg,#6366F1,#818CF8)">
+          M
+          <div class="orb-ring"></div>
+          <div class="orb-waves"><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div></div>
+        </div>
+        <div class="orb-name">Marcus T.</div>
+        <div class="orb-sub">Participant</div>
+      </div>
+
+      <!-- YOU (hidden for listener) -->
+      <div class="orb-card self-card" id="selfOrb">
+        <div class="orb-circle" id="selfCircle" style="background:linear-gradient(135deg,#E8420A,#FF6535)">
+          Y
+          <div class="orb-ring" id="selfRing" style="opacity:0"></div>
+          <div class="orb-waves" id="selfWaves"></div>
+          <div class="orb-mute" id="selfMuteBadge" style="display:none">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>
+          </div>
+        </div>
+        <div class="orb-name" id="selfOrbName" style="color:var(--fire)">You</div>
+        <div class="orb-sub" id="selfOrbSub">Participant</div>
+      </div>
+
+      <!-- Ji-woo (muted) -->
+      <div class="orb-card dim-card" id="jiwooOrb">
+        <div class="host-orb-ctrl" style="gap:3px">
+          <button class="hoc hoc-mute" title="Unmute" onclick="hostUnmute(this,'Ji-woo P.')">🔈</button>
+          <button class="hoc hoc-kick" title="Remove" onclick="hostKick(this,'Ji-woo P.')">✕</button>
+        </div>
+        <div class="orb-circle" style="background:linear-gradient(135deg,#D97706,#FBBF24)">
+          J
+          <div class="orb-ring"></div>
+          <div class="orb-waves"></div>
+          <div class="orb-mute">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>
+          </div>
+        </div>
+        <div class="orb-name">Ji-woo P.</div>
+        <div class="orb-sub">Muted</div>
+      </div>
+
+      <!-- Léa (hand raised, muted) -->
+      <div class="orb-card" id="leaOrb">
+        <div class="host-orb-ctrl" style="gap:3px">
+          <button class="hoc hoc-approve" title="Let speak" onclick="approveHand()">✓</button>
+          <button class="hoc hoc-kick" title="Remove" onclick="hostKick(this,'Léa M.')">✕</button>
+        </div>
+        <div class="orb-circle" style="background:linear-gradient(135deg,#0891B2,#22D3EE)">
+          L
+          <div class="orb-ring"></div>
+          <div class="orb-waves"></div>
+          <div class="orb-mute">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>
+          </div>
+          <div class="orb-hand" id="leaHand">✋</div>
+        </div>
+        <div class="orb-name">Léa M.</div>
+        <div class="orb-sub" id="leaOrbSub">Hand raised</div>
+      </div>
+
+      <!-- Rahul (muted) -->
+      <div class="orb-card dim-card" id="rahulOrb">
+        <div class="host-orb-ctrl" style="gap:3px">
+          <button class="hoc hoc-mute" title="Unmute" onclick="hostUnmute(this,'Rahul S.')">🔈</button>
+          <button class="hoc hoc-kick" title="Remove" onclick="hostKick(this,'Rahul S.')">✕</button>
+        </div>
+        <div class="orb-circle" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">
+          R
+          <div class="orb-ring"></div>
+          <div class="orb-waves"></div>
+          <div class="orb-mute">
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="2.5" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2m14 0v2a7 7 0 01-.11 1.23M12 19v3M8 23h8"/></svg>
+          </div>
+        </div>
+        <div class="orb-name">Rahul S.</div>
+        <div class="orb-sub">Muted</div>
+      </div>
+
+    </div><!-- /orb-grid -->
+
+    <!-- Listeners strip -->
+    <div class="listeners-strip">
+      <div class="lst-label">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0118 0v6"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"/></svg>
+        Listening · 3
+      </div>
+      <div class="lst-row">
+        <div class="lst-av lst-you" id="youLstAv" style="background:linear-gradient(135deg,#E8420A,#FF6535); display:none" title="You (listening)">Y</div>
+        <div class="lst-av" style="background:linear-gradient(135deg,#BE185D,#EC4899)" title="Sofia R.">S</div>
+        <div class="lst-av" style="background:linear-gradient(135deg,#059669,#34D399)" title="Kenji W.">K</div>
+        <div class="lst-more" title="+4 more">+4</div>
+      </div>
+    </div>
+
+    <!-- Bottom controls -->
+    <div class="controls">
+
+      <!-- LISTENER -->
+      <div class="cset cset-listener">
+        <div class="mic-btn mic-locked" title="Listeners cannot speak — raise hand to request">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--dim-2)" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+        </div>
+        <button class="cbtn hand" id="lstHandBtn" onclick="toggleListenerHand()">
+          <span class="hand-icon">✋</span>
+          <span id="lstHandLbl">Raise hand to speak</span>
+        </button>
+        <div class="c-spacer"></div>
+        <div class="vol-wrap">
+          <span class="vol-icon" id="volL">🔉</span>
+          <input type="range" class="vol-slider" min="0" max="100" value="80" oninput="setVol(this,'volL')">
+        </div>
+        <button class="leave-btn" onclick="T('👋 Left room')">Leave</button>
+      </div>
+
+      <!-- PARTICIPANT -->
+      <div class="cset cset-speaker">
+        <button class="mic-btn mic-on" id="micBtn" onclick="toggleMic()" title="Mute / unmute">
+          <svg id="micSvg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+          <div class="mic-slash" id="micSlash" style="display:none"></div>
+        </button>
+        <button class="cbtn hand" id="spkHandBtn" onclick="toggleSpeakerHand()">
+          <span class="hand-icon">✋</span>
+          <span id="spkHandLbl">Raise hand</span>
+        </button>
+        <div class="c-spacer"></div>
+        <div class="vol-wrap">
+          <span class="vol-icon" id="volS">🔉</span>
+          <input type="range" class="vol-slider" min="0" max="100" value="80" oninput="setVol(this,'volS')">
+        </div>
+        <button class="leave-btn" onclick="T('👋 Left room')">Leave</button>
+      </div>
+
+      <!-- HOST -->
+      <div class="cset cset-host">
+        <button class="mic-btn mic-on" id="hostMicBtn" onclick="toggleHostMic()" title="Mute / unmute">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg>
+          <div class="mic-slash" id="hostMicSlash" style="display:none"></div>
+        </button>
+        <button class="cbtn" onclick="muteAll()">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 005.12 2.12M15 9.34V4a3 3 0 00-5.94-.6"/><path d="M17 16.95A7 7 0 015 12v-2"/></svg>
+          Mute all
+        </button>
+        <button class="cbtn" onclick="switchTab('hr')">
+          ✋ Queue <span class="ptab-badge amber" id="hrBtnBadge">1</span>
+        </button>
+        <div class="c-spacer"></div>
+        <div class="vol-wrap">
+          <span class="vol-icon" id="volH">🔉</span>
+          <input type="range" class="vol-slider" min="0" max="100" value="80" oninput="setVol(this,'volH')">
+        </div>
+        <button class="end-btn" onclick="endSession()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
+          End session
+        </button>
+      </div>
+
+    </div><!-- /controls -->
+  </div><!-- /stage -->
+
+  <!-- ╔═════ PANEL ═════╗ -->
+  <div class="panel">
+    <div class="panel-tabs">
+      <button class="ptab on" id="ptab-chat"   onclick="switchTab('chat')">💬 Chat</button>
+      <button class="ptab"    id="ptab-people" onclick="switchTab('people')">
+        👥 People <span style="color:var(--dim-2);font-weight:400;font-size:11px">9</span>
+      </button>
+      <button class="ptab" id="hrTab" style="display:none" onclick="switchTab('hr')">
+        ✋ Queue <span class="ptab-badge amber" id="hrTabBadge">1</span>
+      </button>
+    </div>
+
+    <div class="panel-body">
+
+      <!-- ── Chat pane ── -->
+      <div class="ppane on" id="ppane-chat">
+        <div class="chat-scroll" id="chatScroll">
+          <div class="sys-msg">Session started · 41 min ago</div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#15803D,#22C55E)">A</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname h">Anna K.</span><span class="ctime">41m</span></div>
+              <div class="ctext">Welcome everyone! Today: technical vocabulary and how to confidently explain architecture decisions in English. Jump in anytime 🎉</div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#6366F1,#818CF8)">M</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname">Marcus T.</span><span class="ctime">37m</span></div>
+              <div class="ctext">How do you say "we need to refactor this legacy code" diplomatically to a client?</div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#15803D,#22C55E)">A</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname h">Anna K.</span><span class="ctime">36m</span></div>
+              <div class="ctext">Great question. Try:</div>
+              <div class="correction">
+                <div class="corr-lbl">✏️ Suggested phrase</div>
+                <div class="corr-txt">"We recommend modernising this module to align with current best practices and reduce long-term maintenance costs."</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#D97706,#FBBF24)">J</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname">Ji-woo P.</span><span class="ctime">29m</span></div>
+              <div class="ctext">I always say "the old code is terrible" 😅 This is so useful</div>
+              <div class="reacts">
+                <div class="react mine" onclick="this.classList.toggle('mine')">😂 4</div>
+                <div class="react" onclick="this.classList.toggle('mine')">❤️ 2</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">R</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname">Rahul S.</span><span class="ctime">21m</span></div>
+              <div class="ctext">Can we cover "technical debt"? Hard to explain clearly without sounding vague.</div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#15803D,#22C55E)">A</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname h">Anna K.</span><span class="ctime">19m</span></div>
+              <div class="ctext">Perfect. Key phrase: <em>"We've accumulated technical debt by prioritising speed over code quality."</em> The debt metaphor lands well — stakeholders understand things that accrue cost over time.</div>
+              <div class="reacts">
+                <div class="react mine" onclick="this.classList.toggle('mine')">👍 5</div>
+                <div class="react" onclick="this.classList.toggle('mine')">💡 3</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#E8420A,#FF6535)">Y</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname y">You</span><span class="ctime">8m</span></div>
+              <div class="ctext">What about "scalability" vs "performance"? I often mix these up with non-technical stakeholders.</div>
+            </div>
+          </div>
+
+          <div class="cmsg">
+            <div class="cav" style="background:linear-gradient(135deg,#15803D,#22C55E)">A</div>
+            <div class="cbody">
+              <div class="cmeta"><span class="cname h">Anna K.</span><span class="ctime">6m</span></div>
+              <div class="ctext">Great distinction! <strong>Performance</strong> = how fast now. <strong>Scalability</strong> = how it handles growth. For non-tech: <em>"Our system is fast for 100 users. Scalability means we grow to 100,000 without rebuilding."</em></div>
+              <div class="reacts">
+                <div class="react mine" onclick="this.classList.toggle('mine')">🙌 4</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sys-msg">— Now —</div>
+        </div><!-- /chat-scroll -->
+
+        <div class="chat-foot">
+          <div class="emoji-strip">
+            <span class="emoji-lbl">React</span>
+            <button class="emoji-q" onclick="floatEmoji('👍')">👍</button>
+            <button class="emoji-q" onclick="floatEmoji('❤️')">❤️</button>
+            <button class="emoji-q" onclick="floatEmoji('😂')">😂</button>
+            <button class="emoji-q" onclick="floatEmoji('🎉')">🎉</button>
+            <button class="emoji-q" onclick="floatEmoji('💡')">💡</button>
+            <button class="emoji-q" onclick="floatEmoji('👏')">👏</button>
+          </div>
+          <div class="chat-input-row">
+            <textarea class="chat-inp" id="chatInp" placeholder="Message…" rows="1"
+              onkeydown="chatKey(event)" oninput="chatResize(this)"></textarea>
+            <button class="send-btn" onclick="sendChat()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div><!-- /ppane-chat -->
+
+      <!-- ── People pane ── -->
+      <div class="ppane" id="ppane-people">
+        <div class="plist">
+          <div class="psect">Speaking · 6</div>
+
+          <div class="prow spk">
+            <div class="pav" style="background:linear-gradient(135deg,#15803D,#22C55E)">A<div class="pring"></div></div>
+            <div class="pinfo">
+              <div class="pname hn">Anna K. <span style="font-size:9px;background:var(--green-bg);color:var(--green);padding:1px 6px;border-radius:4px;font-weight:700;margin-left:3px">HOST</span></div>
+              <div class="psub">🇦🇺 Sydney · Teacher</div>
+            </div>
+            <div class="picons"><span class="picon act">🎙</span></div>
+          </div>
+
+          <div class="prow spk">
+            <div class="pav" style="background:linear-gradient(135deg,#6366F1,#818CF8)">M<div class="pring"></div></div>
+            <div class="pinfo"><div class="pname">Marcus T.</div><div class="psub">🇩🇪 Berlin · B2</div></div>
+            <div class="picons"><span class="picon act">🎙</span></div>
+            <div class="phost-btns">
+              <button class="phb" title="Mute" onclick="T('🔇 Marcus muted')">🔇</button>
+              <button class="phb kick" title="Remove" onclick="T('Marcus removed')">✕</button>
+            </div>
+          </div>
+
+          <!-- You as participant/host -->
+          <div class="prow spk" id="youParticipantRow" style="display:none">
+            <div class="pav" style="background:linear-gradient(135deg,#E8420A,#FF6535)">Y<div class="pring" id="youPring"></div></div>
+            <div class="pinfo"><div class="pname yn">You</div><div class="psub">🇵🇱 Warsaw · B2/C1</div></div>
+            <div class="picons" id="youPIcons"><span class="picon act">🎙</span></div>
+          </div>
+
+          <div class="prow">
+            <div class="pav" style="background:linear-gradient(135deg,#D97706,#FBBF24)">J</div>
+            <div class="pinfo"><div class="pname">Ji-woo P.</div><div class="psub">🇰🇷 Seoul · B1</div></div>
+            <div class="picons"><span class="picon mut">🔇</span></div>
+            <div class="phost-btns">
+              <button class="phb" onclick="T('🔈 Ji-woo unmuted')">🔈</button>
+              <button class="phb kick" onclick="T('Ji-woo removed')">✕</button>
+            </div>
+          </div>
+
+          <div class="prow" id="leaPRow">
+            <div class="pav" style="background:linear-gradient(135deg,#0891B2,#22D3EE)">L</div>
+            <div class="pinfo"><div class="pname">Léa M.</div><div class="psub" id="leaPSub">🇫🇷 Paris · C1 · ✋ hand raised</div></div>
+            <div class="picons"><span class="picon" style="opacity:1">✋</span></div>
+            <div class="phost-btns">
+              <button class="phb ok" title="Approve" onclick="approveHand()">✓</button>
+              <button class="phb" title="Deny" onclick="denyHand()">✕</button>
+            </div>
+          </div>
+
+          <div class="prow">
+            <div class="pav" style="background:linear-gradient(135deg,#7C3AED,#A78BFA)">R</div>
+            <div class="pinfo"><div class="pname">Rahul S.</div><div class="psub">🇮🇳 Bangalore · B2</div></div>
+            <div class="picons"><span class="picon mut">🔇</span></div>
+            <div class="phost-btns">
+              <button class="phb" onclick="T('🔈 Rahul unmuted')">🔈</button>
+              <button class="phb kick" onclick="T('Rahul removed')">✕</button>
+            </div>
+          </div>
+
+          <div class="psect" style="margin-top:10px">Listening · 3</div>
+
+          <!-- You as listener -->
+          <div class="prow" id="youListenerRow" style="display:none">
+            <div class="pav" style="background:linear-gradient(135deg,#E8420A,#FF6535)">Y</div>
+            <div class="pinfo"><div class="pname yn">You</div><div class="psub">🇵🇱 Warsaw · Listening</div></div>
+            <div class="picons"><span class="picon" style="opacity:0.45">👂</span></div>
+          </div>
+
+          <div class="prow">
+            <div class="pav" style="background:linear-gradient(135deg,#BE185D,#EC4899)">S</div>
+            <div class="pinfo"><div class="pname">Sofia R.</div><div class="psub">🇧🇷 São Paulo · Listening</div></div>
+            <div class="picons"><span class="picon" style="opacity:0.45">👂</span></div>
+            <div class="phost-btns"><button class="phb kick" onclick="T('Sofia removed')">✕</button></div>
+          </div>
+
+          <div class="prow">
+            <div class="pav" style="background:linear-gradient(135deg,#059669,#34D399)">K</div>
+            <div class="pinfo"><div class="pname">Kenji W.</div><div class="psub">🇯🇵 Tokyo · Listening</div></div>
+            <div class="picons"><span class="picon" style="opacity:0.45">👂</span></div>
+            <div class="phost-btns"><button class="phb kick" onclick="T('Kenji removed')">✕</button></div>
+          </div>
+        </div>
+      </div><!-- /ppane-people -->
+
+      <!-- ── Hand-raise queue (host) ── -->
+      <div class="ppane" id="ppane-hr">
+        <div class="hr-pane">
+          <p class="hr-hint">Approve requests to let listeners speak, or allow muted participants to unmute.</p>
+          <div class="hr-card" id="leaHrCard">
+            <div class="hr-av" style="background:linear-gradient(135deg,#0891B2,#22D3EE)">L</div>
+            <div class="hr-info">
+              <div class="hr-name">Léa M.</div>
+              <div class="hr-sub">🇫🇷 Paris · C1 · wants to speak</div>
+            </div>
+            <div class="hr-acts">
+              <button class="hr-yes" onclick="approveHand()">Let in ✓</button>
+              <button class="hr-no"  onclick="denyHand()">✕</button>
+            </div>
+          </div>
+          <div class="hr-empty" id="hrEmpty">
+            <div class="hr-empty-ico">✋</div>
+            <div>No pending requests</div>
+            <div style="font-size:11px;margin-top:4px">Participants appear here when they raise their hand</div>
+          </div>
+        </div>
+      </div><!-- /ppane-hr -->
+
+    </div><!-- /panel-body -->
+  </div><!-- /panel -->
+
+</div><!-- /room-wrap -->
+
+<script>
+/* ═══════════════════════════════
+   PERSPECTIVE
+═══════════════════════════════ */
+function setMode(m) {
+  document.body.className = m;
+  document.querySelectorAll('.persp-tab').forEach(t => t.classList.remove('on'));
+  document.getElementById('ptab-' + m).classList.add('on');
+
+  cancelHand();
+
+  // self orb appearance
+  const selfOrb = document.getElementById('selfOrb');
+  const selfCircle = document.getElementById('selfCircle');
+
+  if (m === 'host') {
+    selfOrb.className = 'orb-card self-host speaking';
+    selfCircle.style.background = 'linear-gradient(135deg,#15803D,#22C55E)';
+    document.getElementById('selfOrbName').style.color = 'var(--green)';
+    document.getElementById('selfOrbSub').textContent = '🎓 Host (You)';
+    document.getElementById('selfOrbSub').style.color = 'var(--green)';
+    document.getElementById('selfRing').style.opacity = '1';
+    document.getElementById('selfRing').style.animation = 'ringPulse 1.6s ease-in-out infinite';
+    document.getElementById('selfWaves').innerHTML = '<div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div>';
+    document.getElementById('selfMuteBadge').style.display = 'none';
+    isHostMuted = false; syncHostMic();
+  } else {
+    selfOrb.className = 'orb-card self-card';
+    selfCircle.style.background = 'linear-gradient(135deg,#E8420A,#FF6535)';
+    document.getElementById('selfOrbName').style.color = 'var(--fire)';
+    document.getElementById('selfOrbSub').textContent = 'Participant';
+    document.getElementById('selfOrbSub').style.color = '';
+    document.getElementById('selfRing').style.opacity = '0';
+    document.getElementById('selfRing').style.animation = 'none';
+    document.getElementById('selfWaves').innerHTML = '';
+    document.getElementById('selfMuteBadge').style.display = 'none';
+    isMuted = false; syncMic();
+  }
+
+  // hr tab
+  const hrTab = document.getElementById('hrTab');
+  hrTab.style.display = m === 'host' ? 'flex' : 'none';
+
+  // always switch back to chat
+  switchTab('chat');
+}
+
+/* ═══════════════════════════════
+   PANEL TABS
+═══════════════════════════════ */
+function switchTab(id) {
+  ['chat','people','hr'].forEach(k => {
+    const tabEl = k === 'hr' ? document.getElementById('hrTab') : document.getElementById('ptab-' + k);
+    const pane  = document.getElementById('ppane-' + k);
+    if (tabEl) tabEl.classList.remove('on');
+    if (pane)  pane.classList.remove('on');
+  });
+  const tEl = id === 'hr' ? document.getElementById('hrTab') : document.getElementById('ptab-' + id);
+  const pEl = document.getElementById('ppane-' + id);
+  if (tEl) tEl.classList.add('on');
+  if (pEl) pEl.classList.add('on');
+}
+
+/* ═══════════════════════════════
+   MIC — PARTICIPANT
+═══════════════════════════════ */
+let isMuted = false;
+function toggleMic() { isMuted = !isMuted; syncMic(); }
+function syncMic() {
+  const btn   = document.getElementById('micBtn');
+  const slash = document.getElementById('micSlash');
+  const badge = document.getElementById('selfMuteBadge');
+  const ring  = document.getElementById('selfRing');
+  const waves = document.getElementById('selfWaves');
+  const selfOrb = document.getElementById('selfOrb');
+  const youPIcon= document.getElementById('youPIcons');
+  const youPRow = document.getElementById('youParticipantRow');
+  if (isMuted) {
+    btn.className = 'mic-btn mic-off';
+    slash.style.display = 'block';
+    badge.style.display = 'flex';
+    ring.style.opacity = '0'; ring.style.animationName = 'none';
+    waves.innerHTML = '';
+    selfOrb.classList.remove('speaking');
+    selfOrb.classList.add('dim-card');
+    if (youPIcon) youPIcon.innerHTML = '<span class="picon mut">🔇</span>';
+    if (youPRow)  youPRow.classList.remove('spk');
+    T('🔇 Microphone muted');
+  } else {
+    btn.className = 'mic-btn mic-on';
+    slash.style.display = 'none';
+    badge.style.display = 'none';
+    ring.style.opacity = '1'; ring.style.animationName = '';
+    waves.innerHTML = '<div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div><div class="ow"></div>';
+    selfOrb.classList.remove('dim-card');
+    if (youPIcon) youPIcon.innerHTML = '<span class="picon act">🎙</span>';
+    T('🎙 Microphone on');
+  }
+}
+
+/* ═══════════════════════════════
+   MIC — HOST
+═══════════════════════════════ */
+let isHostMuted = false;
+function toggleHostMic() { isHostMuted = !isHostMuted; syncHostMic(); }
+function syncHostMic() {
+  const btn   = document.getElementById('hostMicBtn');
+  const slash = document.getElementById('hostMicSlash');
+  if (isHostMuted) {
+    btn.className = 'mic-btn mic-off';
+    slash.style.display = 'block';
+    T('🔇 Microphone muted');
+  } else {
+    btn.className = 'mic-btn mic-on';
+    slash.style.display = 'none';
+    T('🎙 Microphone on');
+  }
+}
+
+/* ═══════════════════════════════
+   HAND RAISE
+═══════════════════════════════ */
+let handUp = false;
+function toggleListenerHand() {
+  handUp = !handUp;
+  const btn   = document.getElementById('lstHandBtn');
+  const lbl   = document.getElementById('lstHandLbl');
+  const banner= document.getElementById('speakBanner');
+  if (handUp) {
+    btn.classList.add('raised');
+    lbl.textContent = 'Lower hand';
+    banner.style.display = 'flex';
+    T('✋ Request sent — waiting for host');
+  } else { cancelHand(); }
+}
+function toggleSpeakerHand() {
+  handUp = !handUp;
+  const btn = document.getElementById('spkHandBtn');
+  const lbl = document.getElementById('spkHandLbl');
+  if (handUp) {
+    btn.classList.add('raised');
+    lbl.textContent = 'Lower hand';
+    T('✋ Host notified');
+  } else {
+    btn.classList.remove('raised');
+    lbl.textContent = 'Raise hand';
+  }
+}
+function cancelHand() {
+  handUp = false;
+  const banner = document.getElementById('speakBanner');
+  if (banner) banner.style.display = 'none';
+  const lb = document.getElementById('lstHandBtn');
+  if (lb) { lb.classList.remove('raised'); }
+  const ll = document.getElementById('lstHandLbl');
+  if (ll) ll.textContent = 'Raise hand to speak';
+  const sb = document.getElementById('spkHandBtn');
+  if (sb) sb.classList.remove('raised');
+  const sl = document.getElementById('spkHandLbl');
+  if (sl) sl.textContent = 'Raise hand';
+}
+
+/* ═══════════════════════════════
+   HOST ACTIONS
+═══════════════════════════════ */
+function muteAll() {
+  document.querySelectorAll('.orb-card:not(#selfOrb):not(#hostOrb)').forEach(c => {
+    c.classList.remove('speaking');
+    const mb = c.querySelector('.orb-mute');
+    if (mb) mb.style.display = 'flex';
+    c.classList.add('dim-card');
+  });
+  T('🔇 All participants muted');
+}
+
+function hostMute(btn, name) {
+  const card = btn.closest('.orb-card');
+  card.classList.remove('speaking'); card.classList.add('dim-card');
+  let mb = card.querySelector('.orb-mute');
+  if (mb) { mb.style.display = 'flex'; }
+  btn.textContent = '🔈'; btn.title = 'Unmute';
+  btn.onclick = function() { hostUnmute(btn, name); };
+  T('🔇 ' + name + ' muted');
+}
+
+function hostUnmute(btn, name) {
+  const card = btn.closest('.orb-card');
+  card.classList.remove('dim-card');
+  const mb = card.querySelector('.orb-mute');
+  if (mb) mb.style.display = 'none';
+  btn.textContent = '🔇'; btn.title = 'Mute';
+  btn.onclick = function() { hostMute(btn, name); };
+  T('🔈 ' + name + ' can speak');
+}
+
+function hostKick(btn, name) {
+  const card = btn.closest('.orb-card');
+  card.style.transition = 'opacity 0.22s, transform 0.22s';
+  card.style.opacity = '0'; card.style.transform = 'scale(0.82)';
+  setTimeout(() => card.remove(), 240);
+  T(name + ' removed from room');
+}
+
+function approveHand() {
+  // remove hand badge from Léa orb
+  const lh = document.getElementById('leaHand');
+  if (lh) lh.remove();
+  const leaOrb = document.getElementById('leaOrb');
+  if (leaOrb) {
+    const mb = leaOrb.querySelector('.orb-mute');
+    if (mb) mb.style.display = 'none';
+    document.getElementById('leaOrbSub').textContent = 'Participant';
+  }
+  // remove from hr queue
+  const hrc = document.getElementById('leaHrCard');
+  if (hrc) { hrc.style.opacity='0'; setTimeout(()=>hrc.remove(),200); }
+  document.getElementById('hrEmpty').style.display = 'flex';
+  // clear badges
+  ['hrBtnBadge','hrTabBadge'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  // update people list
+  const leaPSub = document.getElementById('leaPSub');
+  if (leaPSub) leaPSub.textContent = '🇫🇷 Paris · C1';
+  T('✅ Léa M. can now speak');
+}
+
+function denyHand() {
+  const hrc = document.getElementById('leaHrCard');
+  if (hrc) { hrc.style.opacity='0'; setTimeout(()=>hrc.remove(),200); }
+  document.getElementById('hrEmpty').style.display = 'flex';
+  T('Request declined');
+}
+
+function endSession() {
+  if (confirm('End this session for all 9 participants?')) T('🛑 Session ended. Thank you all!');
+}
+
+/* ═══════════════════════════════
+   CHAT
+═══════════════════════════════ */
+function chatKey(e) { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); } }
+function sendChat() {
+  const inp = document.getElementById('chatInp');
+  const txt = inp.value.trim(); if (!txt) return;
+  const scroll = document.getElementById('chatScroll');
+  const d = document.createElement('div');
+  d.className = 'cmsg'; d.style.animation = 'cardIn 0.22s var(--sp)';
+  d.innerHTML = `<div class="cav" style="background:linear-gradient(135deg,#E8420A,#FF6535)">Y</div>
+    <div class="cbody"><div class="cmeta"><span class="cname y">You</span><span class="ctime">just now</span></div>
+    <div class="ctext">${txt.replace(/</g,'&lt;')}</div></div>`;
+  // insert before last sys-msg
+  const sysMsgs = scroll.querySelectorAll('.sys-msg');
+  const last = sysMsgs[sysMsgs.length-1];
+  if (last) scroll.insertBefore(d, last);
+  else scroll.appendChild(d);
+  scroll.scrollTop = scroll.scrollHeight;
+  inp.value = ''; chatResize(inp);
+}
+function chatResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,88)+'px'; }
+
+/* ═══════════════════════════════
+   FLOATING EMOJI
+═══════════════════════════════ */
+function floatEmoji(e) {
+  const el = document.createElement('div');
+  el.className = 'float-emoji'; el.textContent = e;
+  el.style.right  = (320 + Math.random()*100) + 'px';
+  el.style.bottom = (70  + Math.random()*30) + 'px';
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1600);
+  T(e + ' reaction sent');
+}
+
+/* ═══════════════════════════════
+   VOLUME
+═══════════════════════════════ */
+function setVol(el, iconId) {
+  const v = +el.value;
+  const ic = document.getElementById(iconId);
+  if (ic) ic.textContent = v===0?'🔇':v<40?'🔈':v<75?'🔉':'🔊';
+}
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+let toastTm;
+function T(msg) {
+  const ex = document.querySelector('.toast');
+  if (ex) ex.remove(); clearTimeout(toastTm);
+  const el = document.createElement('div');
+  el.className = 'toast'; el.textContent = msg;
+  document.body.appendChild(el);
+  toastTm = setTimeout(() => el.remove(), 2600);
+}
+
+/* ═══════════════════════════════
+   TIMER
+═══════════════════════════════ */
+let t = 0;
+setInterval(() => {
+  t++;
+  const el = document.getElementById('timerEl');
+  if (el) el.textContent = String(Math.floor(t/60)).padStart(2,'0') + ':' + String(t%60).padStart(2,'0');
+}, 1000);
+
+/* ═══════════════════════════════
+   SIM: Marcus occasionally speaks
+═══════════════════════════════ */
+setInterval(() => {
+  const c = document.getElementById('marcusOrb');
+  if (!c || c.querySelector('.orb-mute')?.style.display==='flex') return;
+  c.classList.add('speaking');
+  setTimeout(() => c.classList.remove('speaking'), 2000 + Math.random()*2000);
+}, 5500);
+
+/* init */
+setMode('speaker');
+</script>
+</body>
+</html>

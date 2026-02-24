@@ -1,0 +1,2277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LingoPair — Speak. Exchange. Belong.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    :root {
+      --o: #F4500A;
+      --o2: #FF6B35;
+      --op: rgba(244, 80, 10, 0.08);
+      --ob: rgba(244, 80, 10, 0.15);
+      --w: #fff;
+      --k: #000;
+      --k2: #111;
+      --k3: #1d1d1f;
+      --g: #6e6e73;
+      --g2: #86868b;
+      --gl: #d2d2d7;
+      --gll: #f5f5f7;
+      --ease: cubic-bezier(0.25, 0.1, 0.25, 1);
+      --spring: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', sans-serif;
+      background: var(--w);
+      color: var(--k3);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::-webkit-scrollbar {
+      width: 0
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--k3);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+
+    .logo em {
+      font-style: normal;
+      color: var(--o)
+    }
+
+    .nav-links {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 28px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--g);
+      text-decoration: none;
+      letter-spacing: -0.1px;
+      transition: color 0.25s var(--ease);
+    }
+
+    .nav-links a:hover {
+      color: var(--k3)
+    }
+
+    .nav-r {
+      display: flex;
+      align-items: center;
+      gap: 14px
+    }
+
+    .nav-login {
+      font-size: 13px;
+      color: var(--g);
+      text-decoration: none;
+      transition: color 0.25s
+    }
+
+    .nav-login:hover {
+      color: var(--k3)
+    }
+
+    .nav-cta {
+      background: var(--k3);
+      color: var(--w);
+      padding: 8px 18px;
+      border-radius: 980px;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+      transition: background 0.3s var(--ease), opacity 0.3s;
+    }
+
+    .nav-cta:hover {
+      background: var(--o)
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 52px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle noise texture */
+    .hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    /* Soft radial wash */
+    .hero-glow {
+      position: absolute;
+      width: 900px;
+      height: 600px;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background: radial-gradient(ellipse at 50% 0%, rgba(244, 80, 10, 0.07) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(244, 80, 10, 0.06);
+      border: 0.5px solid rgba(244, 80, 10, 0.2);
+      color: var(--o);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 6px 14px 6px 10px;
+      border-radius: 980px;
+      margin-bottom: 48px;
+      letter-spacing: -0.1px;
+      opacity: 0;
+      animation: fadeSlide 0.8s 0.1s var(--spring) forwards;
+    }
+
+    .bdot {
+      width: 5px;
+      height: 5px;
+      background: var(--o);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: breathe 2.4s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1)
+      }
+
+      50% {
+        opacity: 0.35;
+        transform: scale(0.6)
+      }
+    }
+
+    /* Hero headline — per-line reveal */
+    .h1 {
+      font-size: clamp(56px, 8.5vw, 96px);
+      font-weight: 600;
+      line-height: 1.04;
+      letter-spacing: -3.5px;
+      color: var(--k3);
+      max-width: 920px;
+      font-feature-settings: 'kern';
+    }
+
+    .h1-line {
+      overflow: hidden
+    }
+
+    .h1-inner {
+      display: block;
+      opacity: 0;
+      transform: translateY(32px);
+      animation: lineReveal 1s var(--spring) forwards;
+    }
+
+    .h1-line:nth-child(1) .h1-inner {
+      animation-delay: 0.25s
+    }
+
+    .h1-line:nth-child(2) .h1-inner {
+      animation-delay: 0.4s
+    }
+
+    .h1-line:nth-child(3) .h1-inner {
+      animation-delay: 0.55s
+    }
+
+    .h1 .o {
+      color: var(--o)
+    }
+
+    @keyframes lineReveal {
+      from {
+        opacity: 0;
+        transform: translateY(32px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* Hero sub */
+    .hero-sub {
+      font-size: 21px;
+      font-weight: 400;
+      color: #6e6e73;
+      max-width: 560px;
+      line-height: 1.55;
+      margin: 28px auto 52px;
+      letter-spacing: -0.3px;
+      font-feature-settings: 'kern';
+      opacity: 0;
+      animation: fadeSlide 0.9s 0.75s var(--spring) forwards;
+    }
+
+    /* Buttons */
+    .hero-btns {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      animation: fadeSlide 0.8s 0.9s var(--spring) forwards;
+    }
+
+    .btn-p {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--o);
+      color: var(--w);
+      padding: 14px 28px;
+      border-radius: 980px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      letter-spacing: -0.2px;
+      box-shadow: 0 4px 24px rgba(244, 80, 10, 0.28);
+      transition:
+        transform 0.4s var(--spring),
+        box-shadow 0.4s var(--spring),
+        background 0.3s var(--ease);
+    }
+
+    .btn-p:hover {
+      transform: scale(1.02) translateY(-1px);
+      box-shadow: 0 8px 36px rgba(244, 80, 10, 0.36);
+      background: var(--o2);
+    }
+
+    .btn-arr {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: rgba(255, 255, 255, 0.22);
+      border-radius: 50%;
+      font-size: 11px;
+      transition: transform 0.4s var(--spring);
+    }
+
+    .btn-p:hover .btn-arr {
+      transform: translateX(3px)
+    }
+
+    .btn-s {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--k3);
+      text-decoration: none;
+      letter-spacing: -0.2px;
+      padding: 14px 22px;
+      border-radius: 980px;
+      border: 0.5px solid rgba(0, 0, 0, 0.18);
+      transition: border-color 0.3s, color 0.3s, transform 0.4s var(--spring);
+    }
+
+    .btn-s:hover {
+      border-color: rgba(0, 0, 0, 0.4);
+      transform: translateY(-1px)
+    }
+
+    /* Stats pill */
+    .stats {
+      display: flex;
+      margin-top: 80px;
+      background: var(--w);
+      border: 0.5px solid var(--gl);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 28px rgba(0, 0, 0, 0.06);
+      opacity: 0;
+      animation: fadeSlide 0.8s 1.05s var(--spring) forwards;
+    }
+
+    .st {
+      padding: 18px 38px;
+      text-align: center;
+      border-right: 0.5px solid var(--gl)
+    }
+
+    .st:last-child {
+      border-right: none
+    }
+
+    .st-n {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--k3);
+      letter-spacing: -1.5px;
+      display: block;
+    }
+
+    .st-l {
+      font-size: 12px;
+      color: var(--g2);
+      margin-top: 3px;
+      letter-spacing: 0.1px
+    }
+
+    /* Floating cards */
+    .fc {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.93);
+      border-radius: 18px;
+      border: 0.5px solid rgba(0, 0, 0, 0.08);
+      box-shadow: 0 8px 36px rgba(0, 0, 0, 0.09), 0 1px 2px rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      padding: 14px 18px;
+      opacity: 0;
+      /* all hidden by default, revealed per breakpoint */
+      display: none;
+    }
+
+    @keyframes fcIn {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.96)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+      }
+    }
+
+    @keyframes fcF1 {
+
+      0%,
+      100% {
+        transform: translateY(0px)
+      }
+
+      50% {
+        transform: translateY(-28px)
+      }
+    }
+
+    @keyframes fcF2 {
+
+      0%,
+      100% {
+        transform: translateY(-14px)
+      }
+
+      50% {
+        transform: translateY(24px)
+      }
+    }
+
+    @keyframes fcF3 {
+
+      0%,
+      100% {
+        transform: translateY(-8px)
+      }
+
+      50% {
+        transform: translateY(28px)
+      }
+    }
+
+    @keyframes fcF4 {
+
+      0%,
+      100% {
+        transform: translateY(4px)
+      }
+
+      50% {
+        transform: translateY(-26px)
+      }
+    }
+
+    /* ── 980px+: show 4 cards ── */
+    @media(min-width:980px) {
+
+      .fc1,
+      .fc2,
+      .fc3,
+      .fc4 {
+        display: block
+      }
+
+      /* left column */
+      .fc1 {
+        top: 22%;
+        left: 7%;
+        animation: fcIn 1s 1.2s var(--spring) forwards, fcF1 5.0s 2.2s ease-in-out infinite
+      }
+
+      .fc3 {
+        bottom: 22%;
+        left: 7%;
+        animation: fcIn 1s 1.6s var(--spring) forwards, fcF2 5.5s 2.6s ease-in-out infinite
+      }
+
+      /* right column */
+      .fc2 {
+        top: 18%;
+        right: 7%;
+        animation: fcIn 1s 1.4s var(--spring) forwards, fcF2 6.0s 2.4s ease-in-out infinite
+      }
+
+      .fc4 {
+        bottom: 18%;
+        right: 7%;
+        animation: fcIn 1s 1.8s var(--spring) forwards, fcF1 6.5s 2.8s ease-in-out infinite
+      }
+    }
+
+    /* ── 1200px+: add 2 more (6 total) ── */
+    @media(min-width:1200px) {
+
+      .fc5,
+      .fc6 {
+        display: block
+      }
+
+      /* tighten inner columns slightly */
+      .fc1 {
+        left: 9%
+      }
+
+      .fc3 {
+        left: 9%
+      }
+
+      .fc2 {
+        right: 9%
+      }
+
+      .fc4 {
+        right: 9%
+      }
+
+      /* new mid cards */
+      .fc5 {
+        top: 50%;
+        left: 3%;
+        transform: translateY(-50%);
+        animation: fcIn 1s 2.0s var(--spring) forwards, fcF3 7s 3.0s ease-in-out infinite
+      }
+
+      .fc6 {
+        top: 46%;
+        right: 3%;
+        animation: fcIn 1s 2.2s var(--spring) forwards, fcF4 6.5s 3.2s ease-in-out infinite
+      }
+    }
+
+    /* ── 1500px+: add 2 more (8 total) ── */
+    @media(min-width:1500px) {
+
+      .fc7,
+      .fc8 {
+        display: block
+      }
+
+      /* spread outer columns wider */
+      .fc1 {
+        left: 13%
+      }
+
+      .fc3 {
+        left: 13%
+      }
+
+      .fc2 {
+        right: 13%
+      }
+
+      .fc4 {
+        right: 13%
+      }
+
+      .fc5 {
+        left: 5%
+      }
+
+      .fc6 {
+        right: 5%
+      }
+
+      /* new inner-top cards */
+      .fc7 {
+        top: 36%;
+        left: 24%;
+        animation: fcIn 1s 2.4s var(--spring) forwards, fcF2 8s 3.4s ease-in-out infinite
+      }
+
+      .fc8 {
+        top: 32%;
+        right: 24%;
+        animation: fcIn 1s 2.6s var(--spring) forwards, fcF1 7.5s 3.6s ease-in-out infinite
+      }
+    }
+
+    .fc-bar-wrap {
+      margin-top: 10px;
+      background: rgba(0, 0, 0, 0.06);
+      border-radius: 980px;
+      height: 4px;
+      overflow: hidden
+    }
+
+    .fc-bar {
+      height: 4px;
+      border-radius: 980px;
+      background: linear-gradient(90deg, var(--o), #FF8C5A);
+      animation: barGrow 1.6s 2.8s var(--spring) both
+    }
+
+    @keyframes barGrow {
+      from {
+        width: 0
+      }
+    }
+
+    .fc-live {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--o);
+      margin-bottom: 10px
+    }
+
+    .fc-live-dot {
+      width: 6px;
+      height: 6px;
+      background: #34C759;
+      border-radius: 50%;
+      animation: livePulse 1.8s ease-in-out infinite
+    }
+
+    @keyframes livePulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(52, 199, 89, 0.5)
+      }
+
+      50% {
+        box-shadow: 0 0 0 5px rgba(52, 199, 89, 0)
+      }
+    }
+
+    .fc-row {
+      display: flex;
+      align-items: center;
+      gap: 10px
+    }
+
+    .fc-av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(244, 80, 10, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0;
+    }
+
+    .fc-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--k3);
+      letter-spacing: -0.2px
+    }
+
+    .fc-sub {
+      font-size: 11px;
+      color: var(--g2);
+      margin-top: 2px
+    }
+
+    .fc-pill {
+      display: inline-block;
+      background: rgba(244, 80, 10, 0.08);
+      color: var(--o);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 980px;
+      margin-top: 10px;
+      letter-spacing: -0.1px;
+    }
+
+    .fc-msg {
+      font-size: 13px;
+      color: var(--k3);
+      line-height: 1.5;
+      max-width: 172px
+    }
+
+    .fc-time {
+      font-size: 11px;
+      color: var(--g2);
+      margin-top: 5px
+    }
+
+    /* ─── MARQUEE ─── */
+    .mq {
+      background: var(--k3);
+      padding: 16px 0;
+      overflow: hidden
+    }
+
+    .mq-t {
+      display: flex;
+      width: max-content;
+      animation: mqa 26s linear infinite
+    }
+
+    .mq:hover .mq-t {
+      animation-play-state: paused
+    }
+
+    .mi {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 28px;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.38);
+      white-space: nowrap;
+      letter-spacing: -0.1px;
+      transition: color 0.3s;
+    }
+
+    .mi:hover {
+      color: rgba(244, 80, 10, 0.8)
+    }
+
+    .md {
+      width: 3px;
+      height: 3px;
+      background: var(--o);
+      border-radius: 50%;
+      flex-shrink: 0;
+      opacity: 0.5
+    }
+
+    @keyframes mqa {
+      from {
+        transform: translateX(0)
+      }
+
+      to {
+        transform: translateX(-50%)
+      }
+    }
+
+    /* ─── SECTIONS ─── */
+    section.s {
+      padding: 100px 52px
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto
+    }
+
+    .eye {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--o);
+      margin-bottom: 20px;
+    }
+
+    .eye::before {
+      content: '';
+      width: 16px;
+      height: 1px;
+      background: var(--o)
+    }
+
+    /* Scroll word-reveal */
+    .rv {
+      /* words will be wrapped by JS */
+    }
+
+    .rv .wd {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+      margin-right: 0.22em
+    }
+
+    .rv .wd>span {
+      display: inline-block;
+      transform: translateY(105%);
+      transition: transform 0.85s var(--spring);
+    }
+
+    .rv.live .wd>span {
+      transform: translateY(0)
+    }
+
+    /* Fade-up on scroll */
+    .fu {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.9s var(--spring), transform 0.9s var(--spring);
+    }
+
+    .fu.live {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .sh {
+      font-size: clamp(36px, 4.5vw, 52px);
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -2px;
+      color: var(--k3);
+      max-width: 660px;
+    }
+
+    .sh em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--o)
+    }
+
+    .sp {
+      font-size: 17px;
+      font-weight: 300;
+      color: var(--g);
+      line-height: 1.65;
+      max-width: 480px;
+      margin-top: 20px;
+      letter-spacing: -0.1px;
+    }
+
+    /* ─── HOW ─── */
+    .how-g {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--gl);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+
+    .hw {
+      background: var(--w);
+      padding: 44px 40px;
+      position: relative;
+      overflow: hidden;
+      transition: background 0.4s var(--ease);
+    }
+
+    .hw::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--o), transparent);
+      transform: scaleX(0);
+      transition: transform 0.5s var(--spring);
+    }
+
+    .hw:hover {
+      background: rgba(244, 80, 10, 0.02)
+    }
+
+    .hw:hover::after {
+      transform: scaleX(1)
+    }
+
+    .hw-n {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--o);
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      margin-bottom: 32px
+    }
+
+    .hw-i {
+      width: 44px;
+      height: 44px;
+      background: rgba(244, 80, 10, 0.07);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 20px;
+      transition: transform 0.5s var(--spring);
+    }
+
+    .hw:hover .hw-i {
+      transform: scale(1.08)
+    }
+
+    .hw h3 {
+      font-size: 19px;
+      font-weight: 500;
+      color: var(--k3);
+      letter-spacing: -0.5px;
+      margin-bottom: 12px
+    }
+
+    .hw p {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--g);
+      line-height: 1.65
+    }
+
+    /* ─── FEATURES ─── */
+    .feat-sec {
+      background: var(--k3)
+    }
+
+    .feat-sec .eye {
+      color: rgba(244, 80, 10, 0.7)
+    }
+
+    .feat-sec .sh {
+      color: #f5f5f7
+    }
+
+    .feat-sec .sh em {
+      color: rgba(244, 80, 10, 0.9)
+    }
+
+    .feat-sec .sp {
+      color: rgba(255, 255, 255, 0.36)
+    }
+
+    .fg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 24px;
+      overflow: hidden;
+      margin-top: 60px;
+    }
+
+    .fk {
+      background: var(--k3);
+      padding: 44px 38px;
+      transition: background 0.4s var(--ease);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fk::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 0;
+      background: linear-gradient(to top, rgba(244, 80, 10, 0.05), transparent);
+      transition: height 0.5s var(--ease);
+    }
+
+    .fk:hover {
+      background: #1a1a1a
+    }
+
+    .fk:hover::before {
+      height: 100%
+    }
+
+    .fi {
+      width: 46px;
+      height: 46px;
+      background: rgba(244, 80, 10, 0.1);
+      border: 0.5px solid rgba(244, 80, 10, 0.18);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+      transition: transform 0.5s var(--spring), background 0.4s;
+    }
+
+    .fk:hover .fi {
+      transform: scale(1.06)
+    }
+
+    .fk h3 {
+      font-size: 17px;
+      font-weight: 500;
+      color: #f5f5f7;
+      letter-spacing: -0.4px;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1
+    }
+
+    .fk p {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.36);
+      line-height: 1.65;
+      position: relative;
+      z-index: 1
+    }
+
+    /* ─── SPLIT SECTIONS ─── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center
+    }
+
+    .split.r {
+      direction: rtl
+    }
+
+    .split.r>* {
+      direction: ltr
+    }
+
+    .sv {
+      background: var(--gll);
+      border-radius: 24px;
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0.5px solid var(--gl);
+      position: relative;
+    }
+
+    .sv-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 82%
+    }
+
+    .sv-c {
+      background: var(--w);
+      border-radius: 14px;
+      padding: 14px 18px;
+      border: 0.5px solid var(--gl);
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.7s var(--spring), transform 0.7s var(--spring);
+    }
+
+    .split.r .sv-c {
+      transform: translateX(-24px)
+    }
+
+    .sv.live .sv-c {
+      opacity: 1;
+      transform: translateX(0)
+    }
+
+    .sv-c:nth-child(1) {
+      transition-delay: 0.05s
+    }
+
+    .sv-c:nth-child(2) {
+      transition-delay: 0.18s
+    }
+
+    .sv-c:nth-child(3) {
+      transition-delay: 0.31s
+    }
+
+    .sv-av {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(244, 80, 10, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0
+    }
+
+    .sv-t {
+      flex: 1
+    }
+
+    .sv-n {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--k3);
+      letter-spacing: -0.2px
+    }
+
+    .sv-s {
+      font-size: 11px;
+      color: var(--g2);
+      margin-top: 2px
+    }
+
+    .sv-b {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--o);
+      background: rgba(244, 80, 10, 0.08);
+      padding: 3px 10px;
+      border-radius: 980px;
+      white-space: nowrap
+    }
+
+    /* ─── CHAT MOCKUP ─── */
+    .chat-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 88%;
+      padding: 8px 0
+    }
+
+    .bubble-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.65s var(--spring), transform 0.65s var(--spring);
+    }
+
+    .bubble-row.me {
+      flex-direction: row-reverse
+    }
+
+    .sv.live .bubble-row {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .sv.live .bubble-row:nth-child(1) {
+      transition-delay: 0.05s
+    }
+
+    .sv.live .bubble-row:nth-child(2) {
+      transition-delay: 0.18s
+    }
+
+    .sv.live .bubble-row:nth-child(3) {
+      transition-delay: 0.31s
+    }
+
+    .sv.live .bubble-row:nth-child(4) {
+      transition-delay: 0.44s
+    }
+
+    .sv.live .bubble-row:nth-child(5) {
+      transition-delay: 0.57s
+    }
+
+    .chat-av {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(244, 80, 10, 0.09);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      flex-shrink: 0
+    }
+
+    .bubble {
+      max-width: 72%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 13px;
+      line-height: 1.5;
+      font-weight: 400;
+      color: var(--k3);
+      background: var(--w);
+      border: 0.5px solid var(--gl);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .bubble-row.me .bubble {
+      background: #FFF6F2;
+      color: #1d1d1f;
+      border-color: #ffe0d0;
+      border-bottom-right-radius: 5px;
+    }
+
+    .bubble-row:not(.me) .bubble {
+      border-bottom-left-radius: 5px
+    }
+
+    /* correction bubble */
+    .bubble.correction {
+      background: white !important;
+      border: 0.5px solid #e5e5ea !important;
+      color: #1d1d1f !important;
+      padding: 12px 14px 10px;
+      max-width: 88%;
+    }
+
+    .bubble.correction .orig {
+      font-size: 12px;
+      color: #aeaeb2;
+      text-decoration: line-through;
+      text-decoration-color: #aeaeb2;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .bubble.correction .divider {
+      height: 0.5px;
+      background: #e5e5ea;
+      margin: 8px 0;
+    }
+
+    .bubble.correction .fix {
+      font-size: 13px;
+      color: #1d1d1f;
+      font-weight: 400;
+      line-height: 1.55;
+    }
+
+    .bubble.correction .fix strong {
+      color: #1A7A3C;
+      font-weight: 600;
+    }
+
+    .bubble.correction .fix-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #1A7A3C;
+      margin-top: 8px;
+    }
+
+    .bubble-time {
+      font-size: 10px;
+      color: var(--g2);
+      margin-top: 4px;
+      text-align: right;
+      padding: 0 4px
+    }
+
+    .bubble-row.me .bubble-time {
+      text-align: left
+    }
+
+    /* ─── LANGUAGES ─── */
+    .lh {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px
+    }
+
+    .la {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--o);
+      text-decoration: none;
+      letter-spacing: -0.1px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: gap 0.35s var(--spring);
+    }
+
+    .la:hover {
+      gap: 10px
+    }
+
+    .lg {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px
+    }
+
+    .lc {
+      background: var(--w);
+      border: 0.5px solid var(--gl);
+      border-radius: 20px;
+      padding: 24px 22px;
+      transition:
+        border-color 0.4s var(--ease),
+        transform 0.5s var(--spring),
+        box-shadow 0.5s var(--spring);
+      cursor: default;
+    }
+
+    .lc:hover {
+      border-color: rgba(244, 80, 10, 0.3);
+      box-shadow: 0 4px 20px rgba(244, 80, 10, 0.08);
+    }
+
+    .lf {
+      font-size: 32px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .ln {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--k3);
+      letter-spacing: -0.5px;
+      margin-bottom: 4px
+    }
+
+    .lx {
+      font-size: 12px;
+      color: var(--g2)
+    }
+
+    .lt {
+      display: inline-block;
+      background: rgba(244, 80, 10, 0.07);
+      color: var(--o);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 980px;
+      margin-top: 13px;
+    }
+
+    /* ─── TESTIMONIALS ─── */
+    .ts {
+      background: var(--gll)
+    }
+
+    .tg {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 52px
+    }
+
+    .tc {
+      background: var(--w);
+      border-radius: 20px;
+      padding: 32px;
+      border: 0.5px solid var(--gl);
+      transition: transform 0.5s var(--spring), box-shadow 0.5s var(--spring);
+    }
+
+    .tc:hover {
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07)
+    }
+
+    .tc-s {
+      color: var(--o);
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-bottom: 18px
+    }
+
+    .tc-q {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--k3);
+      line-height: 1.6;
+      letter-spacing: -0.1px;
+      margin-bottom: 24px;
+    }
+
+    .tc-a {
+      display: flex;
+      align-items: center;
+      gap: 11px
+    }
+
+    .tc-av {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(244, 80, 10, 0.07);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 17px;
+      flex-shrink: 0
+    }
+
+    .tc-n {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--k3);
+      letter-spacing: -0.2px
+    }
+
+    .tc-m {
+      font-size: 12px;
+      color: var(--g2);
+      margin-top: 2px
+    }
+
+    /* ─── CTA ─── */
+    .cta-w {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto
+    }
+
+    .cta-w .sh {
+      margin: 0 auto 22px;
+      max-width: 100%;
+      text-align: center
+    }
+
+    .cta-w .sp {
+      text-align: center;
+      margin: 0 auto 48px
+    }
+
+    .email-f {
+      display: flex;
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--w);
+      border: 0.5px solid var(--gl);
+      border-radius: 980px;
+      padding: 5px 5px 5px 20px;
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .email-f:focus-within {
+      border-color: rgba(244, 80, 10, 0.4);
+      box-shadow: 0 0 0 4px rgba(244, 80, 10, 0.08), 0 2px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .email-f input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--k3);
+      background: transparent;
+      letter-spacing: -0.1px;
+    }
+
+    .email-f input::placeholder {
+      color: var(--g2)
+    }
+
+    .email-f button {
+      background: var(--o);
+      color: var(--w);
+      border: none;
+      border-radius: 980px;
+      padding: 11px 22px;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      letter-spacing: -0.1px;
+      transition: background 0.3s var(--ease), transform 0.4s var(--spring);
+    }
+
+    .email-f button:hover {
+      background: #E0450A;
+      transform: scale(1.01)
+    }
+
+    .cta-note {
+      font-size: 12px;
+      color: var(--g2);
+      margin-top: 14px;
+      letter-spacing: -0.1px
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--k3);
+      padding: 68px 52px 44px;
+      transform: none !important
+    }
+
+    .ft {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 48px;
+      transform: none !important
+    }
+
+    .fb .logo {
+      color: #f5f5f7
+    }
+
+    .fb .logo em {
+      color: var(--o)
+    }
+
+    .ft-t {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.26);
+      margin-top: 10px;
+      line-height: 1.6;
+      letter-spacing: -0.1px
+    }
+
+    .fn {
+      display: flex;
+      gap: 56px
+    }
+
+    .ftcol h5 {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.3);
+      margin-bottom: 18px
+    }
+
+    .ftcol ul {
+      list-style: none
+    }
+
+    .ftcol li {
+      margin-bottom: 10px
+    }
+
+    .ftcol a {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.26);
+      letter-spacing: -0.1px
+    }
+
+    .ftcol a:hover {
+      color: rgba(255, 255, 255, 0.8)
+    }
+
+    .fb2 {
+      max-width: 1180px;
+      margin: 48px auto 0;
+      padding-top: 24px;
+      border-top: 0.5px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.2);
+      letter-spacing: -0.1px
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(16px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:980px) {
+      nav {
+        padding: 0 24px
+      }
+
+      .nav-links {
+        display: none
+      }
+
+      .hero {
+        padding: 100px 24px 60px
+      }
+
+      .fc {
+        display: none
+      }
+
+      .stats {
+        flex-direction: column
+      }
+
+      .st {
+        border-right: none;
+        border-bottom: 0.5px solid var(--gl)
+      }
+
+      .st:last-child {
+        border-bottom: none
+      }
+
+      section.s {
+        padding: 76px 24px
+      }
+
+      .how-g,
+      .fg,
+      .tg {
+        grid-template-columns: 1fr
+      }
+
+      .lg {
+        grid-template-columns: repeat(2, 1fr)
+      }
+
+      .split {
+        grid-template-columns: 1fr;
+        gap: 48px
+      }
+
+      .split.r {
+        direction: ltr
+      }
+
+      .ft {
+        flex-direction: column
+      }
+
+      .fn {
+        flex-wrap: wrap;
+        gap: 36px
+      }
+
+      footer {
+        padding: 48px 24px 36px
+      }
+
+      .lh {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px
+      }
+
+      .fb2 {
+        flex-direction: column;
+        gap: 10px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <a href="#" class="logo">Lingo<em>Pair</em></a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#teachers">Teachers</a></li>
+      <li><a href="#languages">Languages</a></li>
+    </ul>
+    <div class="nav-r">
+      <a href="#" class="nav-login">Log in</a>
+      <a href="#" class="nav-cta">Get started free</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+
+    <!-- FC1: Match · left outer top -->
+    <div class="fc fc1">
+      <div class="fc-row">
+        <div class="fc-av">🇯🇵</div>
+        <div>
+          <div class="fc-name">Yuki M.</div>
+          <div class="fc-sub">Teaches Japanese · Learns English</div>
+        </div>
+      </div>
+      <div class="fc-pill">✦ 98% match for you</div>
+    </div>
+
+    <!-- FC2: Match · right outer top -->
+    <div class="fc fc2">
+      <div class="fc-row">
+        <div class="fc-av">🇫🇷</div>
+        <div>
+          <div class="fc-name">Marie L.</div>
+          <div class="fc-sub">Teaches French · Learns Korean</div>
+        </div>
+      </div>
+      <div class="fc-pill">✦ 95% match for you</div>
+    </div>
+
+    <!-- FC3: Message · left outer bottom -->
+    <div class="fc fc3">
+      <div class="fc-msg">Your pronunciation has gotten so much better! 🎉</div>
+      <div class="fc-time">Just now · Carlos, 🇧🇷 São Paulo</div>
+    </div>
+
+    <!-- FC4: Streak · right outer bottom -->
+    <div class="fc fc4" style="text-align:center;padding:18px 26px">
+      <div style="font-size:11px;font-weight:500;letter-spacing:1.2px;text-transform:uppercase;color:var(--g2)">Streak
+      </div>
+      <div style="font-size:32px;font-weight:600;color:var(--k3);letter-spacing:-2px;margin:5px 0 2px">🔥 12</div>
+      <div style="font-size:12px;color:var(--g2);font-weight:300">days in a row</div>
+    </div>
+
+    <!-- FC5: Live session · left mid (1200px+) -->
+    <div class="fc fc5" style="min-width:185px">
+      <div class="fc-live"><span class="fc-live-dot"></span>Live session</div>
+      <div class="fc-row">
+        <div class="fc-av">🇩🇪</div>
+        <div>
+          <div class="fc-name">Hans B. &amp; Sofia R.</div>
+          <div class="fc-sub">German ↔ Italian · 24 min</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FC6: Vocab · right mid (1200px+) -->
+    <div class="fc fc6" style="min-width:172px">
+      <div style="font-size:11px;font-weight:500;color:var(--g2);margin-bottom:8px">New word learned</div>
+      <div style="font-size:19px;font-weight:600;color:var(--k3);letter-spacing:-0.5px;margin-bottom:2px">木漏れ日</div>
+      <div style="font-size:12px;color:var(--g);font-weight:300;margin-bottom:10px">Komorebi — sunlight through leaves
+      </div>
+      <div class="fc-bar-wrap">
+        <div class="fc-bar" style="width:73%"></div>
+      </div>
+      <div style="font-size:10px;color:var(--g2);margin-top:5px">73% of daily goal</div>
+    </div>
+
+    <!-- FC7: Level badge · left inner (1500px+) -->
+    <div class="fc fc7" style="min-width:165px">
+      <div
+        style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--g2);margin-bottom:10px">
+        Your level</div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="font-size:26px;font-weight:600;color:var(--o);letter-spacing:-1px">B2</div>
+        <div>
+          <div style="font-size:12px;font-weight:500;color:var(--k3)">Upper Intermediate</div>
+          <div style="font-size:11px;color:var(--g2)">French · ↑ from B1 last month</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FC8: Next session · right inner (1500px+) -->
+    <div class="fc fc8" style="min-width:170px">
+      <div
+        style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.2px;color:var(--g2);margin-bottom:10px">
+        Next session</div>
+      <div class="fc-row">
+        <div class="fc-av">🇰🇷</div>
+        <div>
+          <div class="fc-name">Ji-woo K.</div>
+          <div class="fc-sub">Korean ↔ English · Today 4pm</div>
+        </div>
+      </div>
+      <div
+        style="margin-top:10px;background:rgba(244,80,10,0.07);border-radius:8px;padding:6px 10px;font-size:11px;font-weight:500;color:var(--o)">
+        Join in 2h 14m →</div>
+    </div>
+
+    <div class="badge">
+      <span class="bdot"></span>
+      50,000+ live audio sessions this week
+    </div>
+
+    <h1 class="h1">
+      <span class="h1-line"><span class="h1-inner">Speak a new</span></span>
+      <span class="h1-line"><span class="h1-inner"><span class="o">language</span> with</span></span>
+      <span class="h1-line"><span class="h1-inner">real <span class="o">people</span></span></span>
+    </h1>
+
+    <p class="hero-sub">Join live audio conversations, chat with native speakers, and book lessons with professional
+      teachers — all in one place.</p>
+
+    <div class="hero-btns">
+      <a href="#" class="btn-p">Start for free <span class="btn-arr">→</span></a>
+      <a href="#how" class="btn-s">How it works</a>
+    </div>
+
+    <div class="stats">
+      <div class="st"><span class="st-n counter" data-val="2">2M+</span><span class="st-l">Active learners</span></div>
+      <div class="st"><span class="st-n counter" data-val="190">190</span><span class="st-l">Countries</span></div>
+      <div class="st"><span class="st-n counter" data-val="80">80+</span><span class="st-l">Languages</span></div>
+      <div class="st"><span class="st-n">Free</span><span class="st-l">Forever</span></div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="mq">
+    <div class="mq-t">
+      <span class="mi">🇯🇵 Japanese<span class="md"></span></span>
+      <span class="mi">🇫🇷 French<span class="md"></span></span>
+      <span class="mi">🇩🇪 German<span class="md"></span></span>
+      <span class="mi">🇰🇷 Korean<span class="md"></span></span>
+      <span class="mi">🇧🇷 Portuguese<span class="md"></span></span>
+      <span class="mi">🇪🇸 Spanish<span class="md"></span></span>
+      <span class="mi">🇨🇳 Mandarin<span class="md"></span></span>
+      <span class="mi">🇮🇹 Italian<span class="md"></span></span>
+      <span class="mi">🇷🇺 Russian<span class="md"></span></span>
+      <span class="mi">🇸🇦 Arabic<span class="md"></span></span>
+      <span class="mi">🇹🇷 Turkish<span class="md"></span></span>
+      <span class="mi">🇮🇳 Hindi<span class="md"></span></span>
+      <span class="mi">🇯🇵 Japanese<span class="md"></span></span>
+      <span class="mi">🇫🇷 French<span class="md"></span></span>
+      <span class="mi">🇩🇪 German<span class="md"></span></span>
+      <span class="mi">🇰🇷 Korean<span class="md"></span></span>
+      <span class="mi">🇧🇷 Portuguese<span class="md"></span></span>
+      <span class="mi">🇪🇸 Spanish<span class="md"></span></span>
+      <span class="mi">🇨🇳 Mandarin<span class="md"></span></span>
+      <span class="mi">🇮🇹 Italian<span class="md"></span></span>
+      <span class="mi">🇷🇺 Russian<span class="md"></span></span>
+      <span class="mi">🇸🇦 Arabic<span class="md"></span></span>
+      <span class="mi">🇹🇷 Turkish<span class="md"></span></span>
+      <span class="mi">🇮🇳 Hindi<span class="md"></span></span>
+    </div>
+  </div>
+
+  <!-- SPLIT 1 -->
+  <section class="s" style="background:var(--gll);padding-top:80px;padding-bottom:80px">
+    <div class="wrap">
+      <div class="split fu">
+        <div>
+          <div class="eye">Live audio rooms</div>
+          <h2 class="sh rv">Speak with real people, <em>live</em></h2>
+          <p class="sp">Drop into a live group audio room and start practising instantly. Hosts manage speaking order
+            and time limits so every participant gets a fair turn to speak.</p>
+        </div>
+        <div class="sv" id="sv1">
+          <div class="sv-cards">
+            <div class="sv-c">
+              <div class="sv-av">🎙️</div>
+              <div class="sv-t">
+                <div class="sv-n">Advanced Spanish Room</div>
+                <div class="sv-s">🔴 Live · 14 speakers · Host: Maria G.</div>
+              </div>
+              <div class="sv-b">Join</div>
+            </div>
+            <div class="sv-c">
+              <div class="sv-av">🎌</div>
+              <div class="sv-t">
+                <div class="sv-n">Japanese for Beginners</div>
+                <div class="sv-s">🟡 Starting soon · 6 in waiting</div>
+              </div>
+              <div class="sv-b">Wait</div>
+            </div>
+            <div class="sv-c">
+              <div class="sv-av">🇫🇷</div>
+              <div class="sv-t">
+                <div class="sv-n">French Conversation Club</div>
+                <div class="sv-s">⏱ 3 min left · 8 speakers</div>
+              </div>
+              <div class="sv-b">Listen</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPLIT 2 -->
+  <section class="s" style="padding-top:80px;padding-bottom:80px">
+    <div class="wrap">
+      <div class="split r fu">
+        <div>
+          <div class="eye">Teacher marketplace</div>
+          <h2 class="sh rv">Find the right teacher, <em>instantly</em></h2>
+          <p class="sp">Browse professional language coaches, compare rates, read reviews, and book a session —
+            individual or group — directly through the platform with secure payment.</p>
+        </div>
+        <div class="sv" id="sv2">
+          <div class="sv-cards">
+            <div class="sv-c">
+              <div class="sv-av">🇯🇵</div>
+              <div class="sv-t">
+                <div class="sv-n">Yuki M. — JLPT Specialist</div>
+                <div class="sv-s">⭐ 4.9 · $18/hr · 320 lessons</div>
+              </div>
+              <div class="sv-b">Book</div>
+            </div>
+            <div class="sv-c">
+              <div class="sv-av">🇫🇷</div>
+              <div class="sv-t">
+                <div class="sv-n">Marie L. — Business French</div>
+                <div class="sv-s">⭐ 4.8 · $22/hr · 185 lessons</div>
+              </div>
+              <div class="sv-b">Book</div>
+            </div>
+            <div class="sv-c">
+              <div class="sv-av">🇩🇪</div>
+              <div class="sv-t">
+                <div class="sv-n">Hans B. — German A1–C1</div>
+                <div class="sv-s">⭐ 5.0 · $20/hr · 410 lessons</div>
+              </div>
+              <div class="sv-b">Book</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPLIT 3: Chat corrections -->
+  <section class="s" style="background:var(--gll);padding-top:80px;padding-bottom:80px">
+    <div class="wrap">
+      <div class="split fu">
+        <div>
+          <div class="eye">Smart corrections</div>
+          <h2 class="sh rv">Chat, correct, and <em>learn together</em></h2>
+          <p class="sp">Send a message in your target language and your partner corrects it inline — without
+            interrupting the flow. See exactly what changed and why, every time.</p>
+        </div>
+        <div class="sv" id="sv3">
+          <div class="chat-wrap">
+
+            <!-- Yuki writes with mistakes -->
+            <div class="bubble-row">
+              <div class="chat-av">🇯🇵</div>
+              <div>
+                <div class="bubble">Yesterday I go to the market and buyed some fresh fish.</div>
+                <div class="bubble-time">Yuki · 2:41 PM</div>
+              </div>
+            </div>
+
+            <!-- You send correction -->
+            <div class="bubble-row me">
+              <div class="chat-av">🇺🇸</div>
+              <div>
+                <div class="bubble correction" style="background:#FFF6F2 !important;border-color:#ffe0d0 !important;">
+                  <div class="orig">Yesterday I go to the market and buyed some fresh fish.</div>
+                  <div class="divider"></div>
+                  <div class="fix">Yesterday I <strong>went</strong> to the market and <strong>bought</strong> some
+                    fresh fish.</div>
+                  <div class="fix-label">✓ Corrected</div>
+                </div>
+                <div class="bubble-time">You · 2:42 PM</div>
+              </div>
+            </div>
+
+            <!-- Yuki thanks -->
+            <div class="bubble-row">
+              <div class="chat-av">🇯🇵</div>
+              <div>
+                <div class="bubble" style="min-width:205px;">Ah, irregular verbs again 😅<br>Thank you!</div>
+                <div class="bubble-time">Yuki · 2:43 PM</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHY LINGOPAIR -->
+  <section class="s" id="how">
+    <div class="wrap">
+      <div class="eye fu">Why people join</div>
+      <h2 class="sh rv">Break the speaking barrier</h2>
+      <div class="how-g fu" style="transition-delay:0.18s">
+        <div class="hw">
+          <div class="hw-i">🎙️</div>
+          <h3>From silence to sentences</h3>
+          <p>The fear of speaking is the biggest obstacle in language learning. Live audio rooms, real conversations,
+            and kind corrections from native speakers — LingoPair gets you talking before you feel ready.</p>
+        </div>
+        <div class="hw">
+          <div class="hw-i">🌍</div>
+          <h3>Friends in every timezone</h3>
+          <p>Every conversation partner brings their culture with them — how they live, what they celebrate, how they
+            think. Make real friends across borders without leaving your room.</p>
+        </div>
+        <div class="hw">
+          <div class="hw-i">🚀</div>
+          <h3>Actually become fluent</h3>
+          <p>Apps teach you words. Teachers give you structure. But fluency comes from hours of real conversation —
+            making mistakes, getting corrected, and going again. That's exactly what LingoPair is built for.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="s feat-sec" id="features">
+    <div class="wrap">
+      <div class="eye fu">Features</div>
+      <h2 class="sh rv">Built for real learning</h2>
+      <p class="sp fu" style="transition-delay:0.14s;color:rgba(255,255,255,0.36)">Every tool designed so you can focus
+        on what matters — actually talking to real people.</p>
+      <div class="fg fu" style="transition-delay:0.26s">
+        <div class="fk">
+          <div class="fi">🎙️</div>
+          <h3>Live audio rooms</h3>
+          <p>Create or join group audio sessions. Hosts manage speaking order and set time limits per speaker.</p>
+        </div>
+        <div class="fk">
+          <div class="fi">💬</div>
+          <h3>1-on-1 messaging</h3>
+          <p>Chat privately with other learners. Edit messages, react with emojis, and correct each other naturally.</p>
+        </div>
+        <div class="fk">
+          <div class="fi">🎓</div>
+          <h3>Teacher marketplace</h3>
+          <p>Browse verified teachers, check hourly rates and specialties, and book individual or group lessons
+            instantly.</p>
+        </div>
+        <div class="fk">
+          <div class="fi">📅</div>
+          <h3>Scheduling</h3>
+          <p>Schedule sessions and group rooms with date and time selection. Followers get notified when you go live.
+          </p>
+        </div>
+        <div class="fk">
+          <div class="fi">🎧</div>
+          <h3>Podcast lessons</h3>
+          <p>Subscribe to recurring audio lessons from your favourite teachers — delivered on a schedule like a podcast.
+          </p>
+        </div>
+        <div class="fk">
+          <div class="fi">💳</div>
+          <h3>Payments built-in</h3>
+          <p>Pay for lessons, manage subscriptions, and monetise your teaching — all handled securely inside the
+            platform.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LANGUAGES -->
+  <section class="s" id="languages">
+    <div class="wrap">
+      <div class="lh">
+        <div>
+          <div class="eye fu">Languages</div>
+          <h2 class="sh rv">Find your perfect match</h2>
+        </div>
+        <a href="#" class="la fu" style="transition-delay:0.2s">View all 80+ →</a>
+      </div>
+      <div class="lg fu" style="transition-delay:0.1s">
+        <div class="lc"><span class="lf">🇯🇵</span>
+          <div class="ln">Japanese</div>
+          <div class="lx">342,000 speakers</div>
+          <div class="lt">Most popular ✦</div>
+        </div>
+        <div class="lc"><span class="lf">🇰🇷</span>
+          <div class="ln">Korean</div>
+          <div class="lx">289,000 speakers</div>
+          <div class="lt">Trending 🔥</div>
+        </div>
+        <div class="lc"><span class="lf">🇪🇸</span>
+          <div class="ln">Spanish</div>
+          <div class="lx">561,000 speakers</div>
+          <div class="lt">Most speakers</div>
+        </div>
+        <div class="lc"><span class="lf">🇫🇷</span>
+          <div class="ln">French</div>
+          <div class="lx">418,000 speakers</div>
+          <div class="lt">Top in Europe</div>
+        </div>
+        <div class="lc"><span class="lf">🇩🇪</span>
+          <div class="ln">German</div>
+          <div class="lx">231,000 speakers</div>
+          <div class="lt">Fast matching</div>
+        </div>
+        <div class="lc"><span class="lf">🇨🇳</span>
+          <div class="ln">Mandarin</div>
+          <div class="lx">387,000 speakers</div>
+          <div class="lt">Growing fast 📈</div>
+        </div>
+        <div class="lc"><span class="lf">🇮🇹</span>
+          <div class="ln">Italian</div>
+          <div class="lx">176,000 speakers</div>
+          <div class="lt">Bella lingua ✨</div>
+        </div>
+        <div class="lc"><span class="lf">🇵🇹</span>
+          <div class="ln">Portuguese</div>
+          <div class="lx">298,000 speakers</div>
+          <div class="lt">BR &amp; PT</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="s ts">
+    <div class="wrap">
+      <div class="eye fu">Community</div>
+      <h2 class="sh rv">Real people, real results</h2>
+      <div class="tg fu" style="transition-delay:0.18s">
+        <div class="tc">
+          <div class="tc-s">★★★★★</div>
+          <p class="tc-q">"The live audio rooms are unlike anything else. I joined a Spanish room on my lunch break and
+            spoke for 20 minutes straight — my confidence jumped overnight."</p>
+          <div class="tc-a">
+            <div class="tc-av">🇨🇦</div>
+            <div>
+              <div class="tc-n">Emily R.</div>
+              <div class="tc-m">Learning Spanish · Toronto</div>
+            </div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tc-s">★★★★★</div>
+          <p class="tc-q">"I've been teaching French for 3 years. The marketplace brought me 12 new students in the
+            first month. Scheduling and payments are completely handled for me."</p>
+          <div class="tc-a">
+            <div class="tc-av">🇫🇷</div>
+            <div>
+              <div class="tc-n">Marie L.</div>
+              <div class="tc-m">French Teacher · Paris</div>
+            </div>
+          </div>
+        </div>
+        <div class="tc">
+          <div class="tc-s">★★★★★</div>
+          <p class="tc-q">"I subscribed to a Korean podcast lesson series and it transformed my commute. Two lessons a
+            week, perfectly structured, from a teacher I actually like."</p>
+          <div class="tc-a">
+            <div class="tc-av">🇩🇪</div>
+            <div>
+              <div class="tc-n">Mia K.</div>
+              <div class="tc-m">Learning Korean · Berlin</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="s">
+    <div class="wrap">
+      <div class="cta-w fu">
+        <div class="eye" style="justify-content:center;display:flex">Get started</div>
+        <h2 class="sh" style="max-width:100%;text-align:center;margin:0 auto 22px">Your first live session<br>is
+          <em>waiting</em>
+        </h2>
+        <p class="sp" style="text-align:center;margin:0 auto 48px">Join thousands of learners and teachers. Start
+          speaking today — free to join.</p>
+        <div class="email-f">
+          <input type="email" placeholder="your@email.com">
+          <button>Join for free →</button>
+        </div>
+        <p class="cta-note">No spam. Unsubscribe anytime. Loved in 190 countries.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="ft">
+      <div class="fb">
+        <a href="#" class="logo">Lingo<em>Pair</em></a>
+        <p class="ft-t">Live audio. Real teachers.<br>Real progress.</p>
+      </div>
+      <div class="fn">
+        <div class="ftcol">
+          <h5>Product</h5>
+          <ul>
+            <li><a href="#">Audio rooms</a></li>
+            <li><a href="#">Messaging</a></li>
+            <li><a href="#">Teacher marketplace</a></li>
+            <li><a href="#">Podcast lessons</a></li>
+            <li><a href="#">Scheduling</a></li>
+          </ul>
+        </div>
+        <div class="ftcol">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+          </ul>
+        </div>
+        <div class="ftcol">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy policy</a></li>
+            <li><a href="#">Terms of use</a></li>
+            <li><a href="#">Safety centre</a></li>
+            <li><a href="#">Cookie policy</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="fb2">
+      <span>© 2026 LingoPair. Made with 🧡 for language lovers.</span>
+      <span>EN · ES · FR · 日本語 · 한국어</span>
+    </div>
+  </footer>
+
+  <script>
+    // ── NAV shadow on scroll ──
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.style.borderBottomColor = scrollY > 10
+        ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.07)';
+    }, { passive: true });
+
+    // ── Wrap .rv headings in word spans ──
+    document.querySelectorAll('.rv').forEach(el => {
+      const parts = el.innerHTML.split(/(<[^>]+>[\s\S]*?<\/[^>]+>|<br\s*\/?>)/g);
+      el.innerHTML = parts.map(p =>
+        /^</.test(p) ? p : p.replace(/(\S+)/g, '<span class="wd"><span>$1</span></span>')
+      ).join('');
+      el.querySelectorAll('.wd>span').forEach((s, i) => {
+        s.style.transition = `transform 0.85s cubic-bezier(0.22,1,0.36,1) ${i * 0.08}s`;
+      });
+    });
+
+    // ── Single IntersectionObserver for everything ──
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        if (el.classList.contains('rv')) {
+          el.querySelectorAll('.wd>span').forEach(s => s.style.transform = 'translateY(0)');
+        }
+        el.classList.add('live');
+        obs.unobserve(el);
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.rv, .fu, .sv').forEach(el => obs.observe(el));
+
+    // ── Counter animation (stats) ──
+    const statsBox = document.querySelector('.stats');
+    const counterObs = new IntersectionObserver(entries => {
+      if (!entries[0].isIntersecting) return;
+      document.querySelectorAll('.counter').forEach(el => {
+        const raw = el.dataset.val;
+        const isM = el.textContent.includes('M');
+        const isPlus = el.textContent.includes('+');
+        const target = parseFloat(raw);
+        const start = performance.now();
+        const dur = 1600;
+        function step(now) {
+          const p = Math.min((now - start) / dur, 1);
+          const ease = 1 - Math.pow(1 - p, 3);
+          const val = ease * target;
+          if (isM) el.textContent = val.toFixed(1).replace('.0', '') + 'M+';
+          else el.textContent = Math.round(val) + (isPlus ? '+' : '');
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+      counterObs.unobserve(entries[0].target);
+    }, { threshold: 0.6 });
+    if (statsBox) counterObs.observe(statsBox);
+
+    // ── Subtle parallax on floating cards ──
+    const cards = document.querySelectorAll('.fc');
+    const rates = [0.05, -0.04, 0.035, -0.055, 0.045, -0.03, 0.025, -0.04];
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      cards.forEach((c, i) => {
+        const base = (i % 2 === 0) ? rates[i] : -rates[i];
+        c.style.transform = `translateY(${base * y}px)`;
+      });
+    }, { passive: true });
+  </script>
+</body>
+
+</html>

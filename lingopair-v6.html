@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LingoPair</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --fire: #E8420A;
+  --fire-2: #FF6535;
+  --fire-glow: rgba(232,66,10,0.15);
+  --fire-soft: rgba(232,66,10,0.08);
+
+  --page: #F8F5F2;
+  --white: #FFFFFF;
+  --ink: #1A1208;
+  --ink-2: #3B2A1E;
+  --dim: #8A7368;
+  --dim-2: #C4B8B0;
+  --rule: #E8E0DA;
+  --warm: #F2EDE8;
+
+  --green: #15803D;
+  --green-bg: rgba(21,128,61,0.08);
+  --amber: #B45309;
+  --amber-bg: rgba(180,83,9,0.08);
+
+  --sp: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { font-size: 15px; }
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ═══════════════════════
+   NAV
+═══════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 300;
+  height: 52px;
+  display: flex; align-items: center;
+  padding: 0 24px; gap: 0;
+  background: rgba(248,245,242,0.88);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 19px; font-weight: 400; font-style: italic;
+  color: var(--ink); text-decoration: none;
+  letter-spacing: -0.3px; flex-shrink: 0;
+  margin-right: 28px;
+}
+.nav-logo span { color: var(--fire); font-style: normal; }
+
+.nav-items { display: flex; align-items: center; gap: 1px; }
+.nitem {
+  padding: 5px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 400; color: var(--dim);
+  cursor: pointer; border: none; background: transparent;
+  font-family: 'Sora', sans-serif; letter-spacing: -0.1px;
+  white-space: nowrap; display: flex; align-items: center; gap: 5px;
+  transition: background 0.13s, color 0.13s;
+}
+.nitem:hover { background: var(--warm); color: var(--ink); }
+.nitem.on { background: var(--warm); color: var(--ink); font-weight: 500; }
+.nitem-pip {
+  background: var(--fire); color: white;
+  font-size: 9px; font-weight: 600;
+  padding: 1px 5px; border-radius: 4px; letter-spacing: 0;
+}
+
+.nav-r { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-shrink: 0; }
+.nsearch {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--warm); border: 1px solid transparent;
+  border-radius: 9px; padding: 6px 11px;
+  width: 170px; transition: all 0.2s var(--ease);
+}
+.nsearch:focus-within {
+  background: white; border-color: var(--rule);
+  width: 200px; box-shadow: 0 0 0 3px var(--fire-soft);
+}
+.nsearch svg { opacity: 0.3; flex-shrink: 0; }
+.nsearch input {
+  border: none; outline: none; background: transparent;
+  font-family: 'Sora', sans-serif;
+  font-size: 12.5px; color: var(--ink); width: 100%;
+}
+.nsearch input::placeholder { color: var(--dim-2); }
+
+.nicon-btn {
+  width: 31px; height: 31px; border-radius: 8px;
+  border: none; background: transparent; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: var(--dim);
+  transition: background 0.13s; position: relative;
+}
+.nicon-btn:hover { background: var(--warm); }
+.nidot {
+  position: absolute; top: 5px; right: 5px;
+  width: 6px; height: 6px; background: var(--fire);
+  border-radius: 50%; border: 2px solid var(--page);
+}
+.nav-av {
+  width: 29px; height: 29px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--fire), #FF7043);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10.5px; font-weight: 600; color: white;
+  cursor: pointer; flex-shrink: 0;
+}
+
+/* ═══════════════════════
+   LAYOUT
+═══════════════════════ */
+.page {
+  max-width: 1100px; margin: 0 auto;
+  padding: 28px 24px 80px;
+}
+
+/* ─── Greeting ─── */
+.greet {
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.greet-l { }
+.greet-name {
+  font-family: 'Fraunces', serif;
+  font-size: 30px; font-weight: 500;
+  color: var(--ink); letter-spacing: -0.6px; line-height: 1.1;
+}
+.greet-name em { font-style: italic; color: var(--fire); }
+.greet-meta {
+  font-size: 12.5px; color: var(--dim); margin-top: 4px;
+  display: flex; align-items: center; gap: 10px;
+}
+.streak-chip {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: rgba(232,66,10,0.09); color: var(--fire);
+  font-size: 11.5px; font-weight: 500;
+  padding: 2px 8px; border-radius: 6px;
+}
+.greet-r { display: flex; align-items: center; gap: 8px; }
+
+.start-room-btn {
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 20px; border-radius: 10px;
+  background: var(--fire); color: white;
+  font-family: 'Sora', sans-serif;
+  font-size: 13px; font-weight: 500; letter-spacing: -0.2px;
+  border: none; cursor: pointer;
+  box-shadow: 0 3px 16px rgba(232,66,10,0.28);
+  transition: background 0.18s, transform 0.2s var(--sp), box-shadow 0.2s;
+}
+.start-room-btn:hover {
+  background: #CC3A08; transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(232,66,10,0.32);
+}
+.start-icon {
+  width: 18px; height: 18px; border-radius: 5px;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+
+/* ═══════════════════════
+   MAIN GRID
+═══════════════════════ */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 268px;
+  gap: 20px;
+  align-items: start;
+}
+
+/* ═══════════════════════
+   LEFT FEED
+═══════════════════════ */
+.feed { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+
+/* ─── Section header ─── */
+.sh {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.sh-l { display: flex; align-items: center; gap: 9px; }
+.sh-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px; font-weight: 300;
+  color: var(--ink); letter-spacing: -0.2px;
+}
+.sh-count {
+  display: inline-flex; align-items: center; gap: 4px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 6px;
+}
+.pulse-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.9s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.6); }
+}
+.sh-link {
+  font-size: 12px; color: var(--fire); font-weight: 500;
+  text-decoration: none; letter-spacing: -0.1px;
+  transition: opacity 0.14s;
+}
+.sh-link:hover { opacity: 0.6; }
+
+/* filter row */
+.filters {
+  display: flex; align-items: center; gap: 5px;
+  margin-bottom: 18px; flex-wrap: wrap;
+}
+.fc {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif;
+  font-size: 11.5px; color: var(--dim); cursor: pointer;
+  transition: all 0.13s; letter-spacing: -0.1px;
+}
+.fc:hover { border-color: rgba(26,18,8,0.18); color: var(--ink); }
+.fc.on { background: var(--ink); color: white; border-color: var(--ink); font-weight: 500; }
+.fc.on .fring { background: rgba(255,255,255,0.6); }
+.fring { width: 5px; height: 5px; background: var(--green); border-radius: 50%; }
+
+/* ═══════════════════════
+   AUDIO ROOM CARDS
+   — the core innovation
+═══════════════════════ */
+.rooms { display: flex; flex-direction: column; gap: 10px; }
+
+.room {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.28s var(--sp), box-shadow 0.28s var(--sp), border-color 0.18s;
+  animation: rise 0.45s var(--sp) both;
+  position: relative;
+}
+.room:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(26,18,8,0.08); border-color: rgba(26,18,8,0.1); }
+
+.room:nth-child(1) { animation-delay: 0.04s; }
+.room:nth-child(2) { animation-delay: 0.09s; }
+.room:nth-child(3) { animation-delay: 0.14s; }
+.room:nth-child(4) { animation-delay: 0.19s; }
+@keyframes rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Room hero strip ── */
+.room-hero {
+  height: 6px;
+  background: var(--rule);
+  position: relative;
+  overflow: hidden;
+}
+.room-hero.live { background: linear-gradient(90deg, var(--green), #4ade80, var(--green)); background-size: 200%; animation: heroshift 3s linear infinite; }
+.room-hero.soon { background: linear-gradient(90deg, var(--amber), #fbbf24, var(--amber)); background-size: 200%; animation: heroshift 4s linear infinite; }
+@keyframes heroshift { 0% { background-position: 0% } 100% { background-position: 200% } }
+
+.room-body { padding: 18px 20px; }
+
+/* ── Room layout: left info + right visual ── */
+.room-inner {
+  display: flex; align-items: flex-start;
+  gap: 16px; margin-bottom: 14px;
+}
+
+/* Audio visualization orb */
+.audio-orb {
+  width: 60px; height: 60px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.orb-ring {
+  position: absolute; border-radius: 50%;
+  border: 1.5px solid rgba(22,163,74,0.2);
+  animation: ripple 2s ease-out infinite;
+}
+.orb-ring:nth-child(1) { inset: 0; animation-delay: 0s; }
+.orb-ring:nth-child(2) { inset: -7px; animation-delay: 0.5s; }
+.orb-ring:nth-child(3) { inset: -14px; animation-delay: 1s; }
+@keyframes ripple {
+  0% { opacity: 0.7; transform: scale(0.95); }
+  100% { opacity: 0; transform: scale(1.1); }
+}
+.orb-ring.amber { border-color: rgba(180,83,9,0.2); }
+.orb-ring.muted { border-color: rgba(138,115,104,0.15); animation: none; opacity: 0.3; }
+
+.orb-center {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: var(--green-bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 19px;
+  border: 1px solid rgba(22,163,74,0.15);
+  position: relative; z-index: 1;
+  flex-shrink: 0;
+}
+.orb-center.amber { background: var(--amber-bg); border-color: rgba(180,83,9,0.15); }
+.orb-center.muted { background: var(--warm); border-color: var(--rule); }
+
+/* ── Room info ── */
+.room-info { flex: 1; min-width: 0; }
+.room-tags { display: flex; align-items: center; gap: 5px; margin-bottom: 5px; flex-wrap: wrap; }
+.rtag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10px; font-weight: 500;
+  padding: 2px 7px; border-radius: 5px; letter-spacing: -0.1px;
+}
+.rtag.brand { background: var(--fire-soft); color: var(--fire); }
+.rtag.teacher { background: var(--green-bg); color: var(--green); }
+.rtag.plain { background: var(--warm); color: var(--dim); }
+
+.room-title {
+  font-size: 14.5px; font-weight: 500; color: var(--ink);
+  letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 4px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.room-desc {
+  font-size: 12px; color: var(--dim); line-height: 1.55;
+  display: -webkit-box; -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical; overflow: hidden;
+  letter-spacing: -0.1px;
+}
+
+.room-status-r {
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 6px; flex-shrink: 0;
+}
+.rstatus {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 500;
+  padding: 3px 9px; border-radius: 6px; letter-spacing: 0.05px;
+}
+.rstatus.live { background: var(--green-bg); color: var(--green); }
+.rstatus.soon { background: var(--amber-bg); color: var(--amber); }
+.rstatus.sched { background: var(--warm); color: var(--dim); }
+.rs-dot { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+
+/* ── Speakers row ── */
+.room-foot {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 10px;
+}
+.room-speakers { display: flex; align-items: center; gap: 8px; }
+
+/* Waveform speakers */
+.speaker-group { display: flex; align-items: center; gap: 6px; }
+.speaker {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 8px; border-radius: 8px;
+  background: var(--warm); border: 1px solid var(--rule);
+  font-size: 11.5px; color: var(--ink); font-weight: 400;
+}
+.speaker .sav {
+  width: 20px; height: 20px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; color: white;
+  flex-shrink: 0;
+}
+.wave {
+  display: flex; align-items: center; gap: 1.5px; height: 12px;
+}
+.wave-bar {
+  width: 2.5px; border-radius: 2px; background: var(--green);
+  animation: wave 0.8s ease-in-out infinite;
+}
+.wave-bar:nth-child(1) { height: 4px; animation-delay: 0s; }
+.wave-bar:nth-child(2) { height: 10px; animation-delay: 0.1s; }
+.wave-bar:nth-child(3) { height: 6px; animation-delay: 0.2s; }
+.wave-bar:nth-child(4) { height: 12px; animation-delay: 0.15s; }
+.wave-bar:nth-child(5) { height: 5px; animation-delay: 0.25s; }
+@keyframes wave {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.35); }
+}
+
+.room-stats {
+  font-size: 11.5px; color: var(--dim-2);
+  display: flex; align-items: center; gap: 8px;
+}
+
+.action-btn {
+  padding: 7px 16px; border-radius: 9px;
+  font-family: 'Sora', sans-serif;
+  font-size: 12px; font-weight: 500; letter-spacing: -0.15px;
+  cursor: pointer; border: none; flex-shrink: 0;
+  transition: all 0.2s var(--sp);
+}
+.action-btn.join {
+  background: var(--fire); color: white;
+  box-shadow: 0 2px 10px rgba(232,66,10,0.22);
+}
+.action-btn.join:hover { background: #CC3A08; transform: scale(1.04); }
+.action-btn.wait { background: var(--warm); color: var(--ink); border: 1px solid var(--rule); }
+.action-btn.wait:hover { background: white; border-color: rgba(26,18,8,0.15); }
+.action-btn.remind { background: transparent; color: var(--fire); border: 1px solid rgba(232,66,10,0.22); }
+.action-btn.remind:hover { background: var(--fire-soft); }
+
+/* emoji reactions strip - removed */
+
+/* ═══════════════════════
+   TEACHERS LIST — compact & clean
+═══════════════════════ */
+.teacher-list { display: flex; flex-direction: column; gap: 0; }
+
+.trow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px;
+  border: 1px solid var(--rule);
+  border-bottom: none;
+  background: white; cursor: pointer;
+  transition: background 0.13s, z-index 0.13s;
+  position: relative;
+  animation: rise 0.45s var(--sp) both;
+}
+.trow:first-child { border-radius: 14px 14px 0 0; }
+.trow:last-child { border-radius: 0 0 14px 14px; border-bottom: 1px solid var(--rule); }
+.trow:only-child { border-radius: 14px; border-bottom: 1px solid var(--rule); }
+.trow:hover { background: var(--warm); z-index: 1; }
+.trow:nth-child(1) { animation-delay: 0.05s; }
+.trow:nth-child(2) { animation-delay: 0.09s; }
+.trow:nth-child(3) { animation-delay: 0.13s; }
+.trow:nth-child(4) { animation-delay: 0.17s; }
+.trow:nth-child(5) { animation-delay: 0.21s; }
+
+.t-av {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: var(--warm); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 21px; flex-shrink: 0;
+  border: 1px solid var(--rule);
+}
+.t-info { flex: 1; min-width: 0; }
+.t-name { font-size: 13px; font-weight: 500; color: var(--ink); letter-spacing: -0.25px; }
+.t-sub { font-size: 11px; color: var(--dim); }
+.t-r { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.t-stars { color: #D97706; font-size: 9.5px; letter-spacing: 1px; }
+.t-rate { font-size: 13px; font-weight: 600; color: var(--ink); letter-spacing: -0.4px; }
+.t-badge {
+  font-size: 9px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.3px; padding: 2px 6px; border-radius: 4px;
+  background: var(--fire-soft); color: var(--fire);
+}
+.t-badge.g { background: var(--green-bg); color: var(--green); }
+
+/* ═══════════════════════
+   DISCOVER — horizontal
+═══════════════════════ */
+.disc-scroll {
+  display: flex; gap: 9px;
+  overflow-x: auto; padding-bottom: 3px;
+  scrollbar-width: none;
+}
+.disc-scroll::-webkit-scrollbar { display: none; }
+
+.dc {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 14px; overflow: hidden;
+  min-width: 180px; max-width: 180px;
+  cursor: pointer; flex-shrink: 0;
+  transition: transform 0.28s var(--sp), box-shadow 0.28s var(--sp);
+  animation: rise 0.45s var(--sp) both;
+}
+.dc:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(26,18,8,0.08); }
+.dc-thumb {
+  height: 78px; display: flex; align-items: center;
+  justify-content: center; font-size: 28px; position: relative;
+}
+.dc-tag {
+  position: absolute; bottom: 7px; left: 8px;
+  background: rgba(26,18,8,0.48); color: rgba(255,255,255,0.9);
+  font-size: 8.5px; font-weight: 600; letter-spacing: 0.5px;
+  text-transform: uppercase; padding: 2px 6px;
+  border-radius: 4px; backdrop-filter: blur(6px);
+}
+.dc-body { padding: 11px 13px; }
+.dc-title { font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; margin-bottom: 3px; line-height: 1.35; }
+.dc-meta { font-size: 10.5px; color: var(--dim-2); margin-bottom: 6px; }
+.dc-price { font-size: 12px; font-weight: 600; color: var(--fire); letter-spacing: -0.3px; }
+
+/* ═══════════════════════
+   SIDEBAR
+═══════════════════════ */
+.sidebar { display: flex; flex-direction: column; gap: 10px; position: sticky; top: 64px; }
+
+.sc {
+  background: white; border: 1px solid var(--rule);
+  border-radius: 16px; padding: 17px;
+  animation: rise 0.45s var(--sp) both;
+}
+
+.sc-hd {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 13px;
+}
+.sc-title {
+  font-family: 'Fraunces', serif;
+  font-size: 15px; font-weight: 300;
+  color: var(--ink); letter-spacing: -0.2px;
+}
+.sc-link {
+  font-family: 'Sora', sans-serif;
+  font-size: 11px; color: var(--fire); font-weight: 500;
+  text-decoration: none; transition: opacity 0.14s;
+}
+.sc-link:hover { opacity: 0.6; }
+
+/* create room CTA — inverted */
+.cta-tile {
+  background: var(--ink); border: none;
+  border-radius: 16px; padding: 20px;
+  cursor: pointer; width: 100%; text-align: left;
+  animation: rise 0.45s var(--sp) both;
+  transition: background 0.18s;
+  margin-bottom: 0;
+}
+.cta-tile:hover { background: var(--ink-2); }
+.cta-glyph {
+  width: 38px; height: 38px; border-radius: 11px;
+  background: rgba(255,255,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; margin-bottom: 12px;
+}
+.cta-title {
+  font-family: 'Fraunces', serif;
+  font-size: 17px; font-weight: 300; font-style: italic;
+  color: white; letter-spacing: -0.3px; margin-bottom: 4px;
+  line-height: 1.2;
+}
+.cta-sub { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; letter-spacing: -0.1px; margin-bottom: 16px; }
+.cta-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 8px;
+  background: var(--fire); color: white;
+  font-family: 'Sora', sans-serif;
+  font-size: 12px; font-weight: 500; letter-spacing: -0.15px;
+  border: none; cursor: pointer;
+  box-shadow: 0 3px 12px rgba(232,66,10,0.4);
+  transition: background 0.18s, transform 0.18s var(--sp);
+}
+.cta-btn:hover { background: #CC3A08; transform: scale(1.04); }
+
+/* stats grid */
+.stats-g {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--rule);
+  border-radius: 10px; overflow: hidden; margin-bottom: 14px;
+}
+.sg { background: var(--warm); padding: 10px 11px; text-align: center; }
+.sg-n {
+  font-family: 'Fraunces', serif;
+  font-size: 21px; color: var(--ink);
+  display: block; margin-bottom: 1px; letter-spacing: -0.5px;
+}
+.sg-l { font-size: 9.5px; color: var(--dim-2); text-transform: uppercase; letter-spacing: 0.3px; }
+
+.prow { display: none; }
+.pbar { display: none; }
+.pfill { display: none; }
+
+/* ═══════════════════════
+   PAID GROUP LESSON CARDS
+═══════════════════════ */
+.group-lessons { display: flex; flex-direction: column; gap: 10px; }
+
+.gl-card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.28s var(--sp), box-shadow 0.28s var(--sp), border-color 0.18s;
+  animation: rise 0.45s var(--sp) both;
+}
+.gl-card:hover { transform: translateY(-2px); box-shadow: 0 10px 36px rgba(26,18,8,0.08); border-color: rgba(26,18,8,0.1); }
+.gl-card:nth-child(1) { animation-delay: 0.05s; }
+.gl-card:nth-child(2) { animation-delay: 0.10s; }
+.gl-card:nth-child(3) { animation-delay: 0.15s; }
+.gl-card:nth-child(4) { animation-delay: 0.20s; }
+
+.gl-top-bar {
+  height: 5px;
+  background: linear-gradient(90deg, var(--fire), var(--fire-2));
+}
+
+.gl-body { padding: 18px 20px; }
+
+.gl-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 14px;
+  margin-bottom: 12px;
+}
+.gl-header-l { flex: 1; min-width: 0; }
+
+.gl-tags { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-bottom: 7px; }
+.gl-tag {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 500;
+  padding: 2px 8px; border-radius: 5px; letter-spacing: -0.1px;
+}
+.gl-tag.level-b2 { background: rgba(99,102,241,0.08); color: #4338CA; }
+.gl-tag.level-c1 { background: rgba(139,92,246,0.1); color: #6D28D9; }
+.gl-tag.level-b1 { background: rgba(59,130,246,0.08); color: #1D4ED8; }
+.gl-tag.level-a2 { background: rgba(16,185,129,0.08); color: #065F46; }
+.gl-tag.lang { background: var(--warm); color: var(--dim); }
+.gl-tag.it { background: rgba(15,23,42,0.07); color: var(--ink-2); }
+
+.gl-title {
+  font-size: 15px; font-weight: 600; color: var(--ink);
+  letter-spacing: -0.35px; line-height: 1.3; margin-bottom: 4px;
+}
+.gl-desc {
+  font-size: 12px; color: var(--dim); line-height: 1.6;
+  letter-spacing: -0.1px;
+}
+
+/* plan list */
+.gl-plan {
+  margin: 12px 0;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.gl-plan-item {
+  display: flex; align-items: baseline; gap: 8px;
+  font-size: 11.5px; color: var(--dim); line-height: 1.45;
+}
+.gl-plan-num {
+  font-size: 10px; font-weight: 600;
+  color: var(--fire); flex-shrink: 0;
+  width: 14px; text-align: right;
+  letter-spacing: -0.1px;
+}
+
+.gl-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; gap: 10px;
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+.gl-footer-l { display: flex; align-items: center; gap: 14px; }
+.gl-teacher { display: flex; align-items: center; gap: 7px; }
+.gl-teacher-av {
+  width: 26px; height: 26px; border-radius: 8px;
+  background: var(--warm); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 14px; border: 1px solid var(--rule);
+}
+.gl-teacher-name { font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; }
+.gl-teacher-stars { font-size: 9px; color: #D97706; letter-spacing: 1px; display: block; }
+
+.gl-spots {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11.5px; color: var(--dim);
+}
+.spots-bar {
+  width: 60px; height: 4px; border-radius: 2px;
+  background: var(--rule); overflow: hidden;
+}
+.spots-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--fire); transition: width 0.6s var(--sp);
+}
+.spots-fill.low { background: #D97706; }
+.spots-fill.full { background: #DC2626; }
+
+.gl-price-block { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.gl-schedule { font-size: 11px; color: var(--dim-2); text-align: right; line-height: 1.4; }
+.gl-price {
+  font-size: 16px; font-weight: 600; color: var(--ink);
+  letter-spacing: -0.5px;
+}
+.gl-price-sub { font-size: 10.5px; color: var(--dim-2); }
+
+.book-btn {
+  padding: 8px 18px; border-radius: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 12.5px; font-weight: 500; letter-spacing: -0.15px;
+  background: var(--fire); color: white;
+  border: none; cursor: pointer;
+  box-shadow: 0 2px 10px rgba(232,66,10,0.22);
+  transition: background 0.18s, transform 0.2s var(--sp);
+  flex-shrink: 0;
+}
+.book-btn:hover { background: #CC3A08; transform: scale(1.04); }
+.book-btn.full { background: var(--warm); color: var(--dim); box-shadow: none; border: 1px solid var(--rule); cursor: not-allowed; }
+
+/* upcoming */
+.up-row {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 0; border-bottom: 1px solid var(--rule);
+}
+.up-row:last-child { border-bottom: none; padding-bottom: 0; }
+.up-t { text-align: center; flex-shrink: 0; width: 32px; }
+.up-h { font-family: 'Fraunces', serif; font-size: 16px; color: var(--ink); letter-spacing: -0.4px; }
+.up-a { font-size: 8.5px; color: var(--dim-2); text-transform: uppercase; letter-spacing: 0.3px; }
+.up-info { flex: 1; min-width: 0; }
+.up-title { font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.up-sub { font-size: 10.5px; color: var(--dim-2); }
+.up-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* messages */
+.msg {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--rule);
+  cursor: pointer; transition: opacity 0.13s;
+}
+.msg:hover { opacity: 0.65; }
+.msg:last-child { border-bottom: none; padding-bottom: 0; }
+.m-av {
+  width: 31px; height: 31px; border-radius: 9px;
+  background: var(--warm); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0; position: relative;
+}
+.m-online {
+  position: absolute; bottom: -1px; right: -1px;
+  width: 8px; height: 8px; background: var(--green);
+  border-radius: 50%; border: 2px solid white;
+}
+.m-info { flex: 1; min-width: 0; }
+.m-name { font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; }
+.m-prev { font-size: 10.5px; color: var(--dim-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.m-badge {
+  background: var(--fire); color: white;
+  font-size: 9.5px; font-weight: 600;
+  min-width: 17px; height: 17px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 3px; flex-shrink: 0;
+}
+
+/* suggest */
+.sug {
+  display: flex; align-items: center; gap: 9px;
+  padding: 7px 0; border-bottom: 1px solid var(--rule);
+}
+.sug:last-child { border-bottom: none; padding-bottom: 0; }
+.sav2 {
+  width: 31px; height: 31px; border-radius: 9px;
+  background: var(--warm); display: flex;
+  align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.s-info { flex: 1; min-width: 0; }
+.s-name { font-size: 12px; font-weight: 500; color: var(--ink); letter-spacing: -0.2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.s-sub { font-size: 10.5px; color: var(--dim-2); }
+.f-btn {
+  font-size: 11px; font-weight: 500;
+  padding: 4px 10px; border-radius: 7px;
+  border: 1px solid var(--rule); background: white;
+  cursor: pointer; font-family: 'Sora', sans-serif;
+  color: var(--ink); transition: all 0.13s; flex-shrink: 0;
+}
+.f-btn:hover { background: var(--warm); }
+.f-btn.on { background: var(--warm); color: var(--dim); border-color: transparent; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo">Lingo<span>Pair</span></a>
+  <div class="nav-items">
+    <button class="nitem on">Home</button>
+    <button class="nitem">🎙 Rooms</button>
+    <button class="nitem">Messages <span class="nitem-pip">3</span></button>
+    <button class="nitem">Marketplace</button>
+    <button class="nitem">Schedule</button>
+    <button class="nitem">Discover</button>
+  </div>
+  <div class="nav-r">
+    <div class="nsearch">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none">
+        <circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <input type="text" placeholder="Search rooms, teachers…">
+    </div>
+    <button class="nicon-btn">🔔<span class="nidot"></span></button>
+    <div class="nav-av">YM</div>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- Greeting -->
+  <div class="greet">
+    <div class="greet-l">
+      <h1 class="greet-name">Good evening, <em>Yasmine</em></h1>
+      <div class="greet-meta">
+        Sunday, Feb 22
+        <span class="streak-chip">🔥 14-day streak</span>
+        <span>B2 Japanese</span>
+      </div>
+    </div>
+    <div class="greet-r">
+      <div class="filters" style="margin-bottom:0">
+        <button class="fc on"><span class="fring"></span> Live now</button>
+        <button class="fc">🇯🇵 Japanese</button>
+        <button class="fc">🇰🇷 Korean</button>
+        <button class="fc">🇫🇷 French</button>
+        <button class="fc">+ More</button>
+      </div>
+      <button class="start-room-btn" id="startBtn">
+        <span class="start-icon">🎙</span>
+        Start a room
+      </button>
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- ── FEED ── -->
+    <div class="feed">
+
+      <!-- AUDIO ROOMS -->
+      <div>
+        <div class="sh">
+          <div class="sh-l">
+            <span class="sh-title">Audio Rooms</span>
+            <span class="sh-count"><span class="pulse-dot"></span> 8 live</span>
+          </div>
+          <a href="#" class="sh-link">See all →</a>
+        </div>
+
+        <div class="rooms">
+
+          <!-- Room 1 — top, live -->
+          <div class="room">
+            <div class="room-hero live"></div>
+            <div class="room-body">
+              <div class="room-inner">
+                <div class="audio-orb">
+                  <div class="orb-ring"></div>
+                  <div class="orb-ring"></div>
+                  <div class="orb-ring"></div>
+                  <div class="orb-center">🇯🇵</div>
+                </div>
+                <div class="room-info">
+                  <div class="room-tags">
+                    <span class="rtag brand">⭐ Top room</span>
+                    <span class="rtag plain">Intermediate</span>
+                    <span class="rtag plain">🇯🇵→🇺🇸</span>
+                  </div>
+                  <div class="room-title">Japanese Business Vocab & Keigo</div>
+                  <div class="room-desc">Office culture, polite speech, and workplace vocabulary with native speakers from Tokyo. Open floor format.</div>
+                </div>
+                <div class="room-status-r">
+                  <span class="rstatus live"><span class="rs-dot"></span> Live</span>
+                </div>
+              </div>
+              <div class="room-foot">
+                <div class="room-speakers">
+                  <div class="speaker-group">
+                    <div class="speaker">
+                      <div class="sav" style="background:#D97706">Y</div>
+                      <div class="wave">
+                        <div class="wave-bar"></div><div class="wave-bar"></div>
+                        <div class="wave-bar"></div><div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                      </div>
+                    </div>
+                    <div class="speaker">
+                      <div class="sav" style="background:#6366F1">M</div>
+                      <div class="wave">
+                        <div class="wave-bar" style="animation-delay:.3s"></div>
+                        <div class="wave-bar" style="animation-delay:.1s"></div>
+                        <div class="wave-bar" style="animation-delay:.4s"></div>
+                        <div class="wave-bar" style="animation-delay:.2s"></div>
+                        <div class="wave-bar" style="animation-delay:.05s"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="room-stats">
+                    <span>+2 more speaking</span>
+                    <span>👂 14 listening</span>
+                  </div>
+                </div>
+                <button class="action-btn join" data-t="join">Join room →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room 2 — live -->
+          <div class="room">
+            <div class="room-hero live"></div>
+            <div class="room-body">
+              <div class="room-inner">
+                <div class="audio-orb">
+                  <div class="orb-ring"></div>
+                  <div class="orb-ring"></div>
+                  <div class="orb-ring"></div>
+                  <div class="orb-center">🇰🇷</div>
+                </div>
+                <div class="room-info">
+                  <div class="room-tags">
+                    <span class="rtag plain">Beginner</span>
+                    <span class="rtag plain">🇰🇷→🇺🇸</span>
+                  </div>
+                  <div class="room-title">K-Pop & Korean Culture Chat</div>
+                  <div class="room-desc">Casual conversation practice — artists, dramas, music in Korean.</div>
+                </div>
+                <div class="room-status-r">
+                  <span class="rstatus live"><span class="rs-dot"></span> Live</span>
+                </div>
+              </div>
+              <div class="room-foot">
+                <div class="room-speakers">
+                  <div class="speaker-group">
+                    <div class="speaker">
+                      <div class="sav" style="background:#8B5CF6">J</div>
+                      <div class="wave">
+                        <div class="wave-bar" style="animation-delay:.2s"></div>
+                        <div class="wave-bar" style="animation-delay:.05s"></div>
+                        <div class="wave-bar" style="animation-delay:.35s"></div>
+                        <div class="wave-bar" style="animation-delay:.15s"></div>
+                        <div class="wave-bar" style="animation-delay:.4s"></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="room-stats"><span>2 speaking</span><span>👂 7 listening</span></div>
+                </div>
+                <button class="action-btn join" data-t="join">Join →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room 3 — starting soon -->
+          <div class="room">
+            <div class="room-hero soon"></div>
+            <div class="room-body">
+              <div class="room-inner">
+                <div class="audio-orb">
+                  <div class="orb-ring amber"></div>
+                  <div class="orb-ring amber"></div>
+                  <div class="orb-ring amber"></div>
+                  <div class="orb-center amber">🇪🇸</div>
+                </div>
+                <div class="room-info">
+                  <div class="room-tags">
+                    <span class="rtag teacher">🎓 Teacher</span>
+                    <span class="rtag plain">🇪🇸→🇬🇧</span>
+                  </div>
+                  <div class="room-title">Spanish for Travelers — Practical Phrases</div>
+                  <div class="room-desc">Airports, restaurants, directions. Hosted by Maria G., certified teacher. Waiting area open.</div>
+                </div>
+                <div class="room-status-r">
+                  <span class="rstatus soon"><span class="rs-dot"></span> In 8 min</span>
+                </div>
+              </div>
+              <div class="room-foot">
+                <div class="room-stats" style="font-size:12px;color:var(--dim)">12 joined · waitlist open now</div>
+                <button class="action-btn wait" data-t="wait">Join waitlist</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Room 4 — scheduled -->
+          <div class="room">
+            <div class="room-hero" style="background:var(--rule)"></div>
+            <div class="room-body">
+              <div class="room-inner">
+                <div class="audio-orb">
+                  <div class="orb-ring muted"></div>
+                  <div class="orb-ring muted"></div>
+                  <div class="orb-center muted">🇫🇷</div>
+                </div>
+                <div class="room-info">
+                  <div class="room-tags">
+                    <span class="rtag plain">🇫🇷→🇺🇸</span>
+                    <span class="rtag plain">All levels</span>
+                  </div>
+                  <div class="room-title">French Cinema Club — Amélie (2001)</div>
+                  <div class="room-desc">Weekly film discussion. Watch the film before joining. Relaxed, slow-paced conversation.</div>
+                </div>
+                <div class="room-status-r">
+                  <span class="rstatus sched"><span class="rs-dot"></span> Today 6 PM</span>
+                </div>
+              </div>
+              <div class="room-foot">
+                <div class="room-stats" style="font-size:12px;color:var(--dim)">8 signed up · 12 spots remaining</div>
+                <button class="action-btn remind" data-t="remind">🔔 Remind me</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TEACHERS -->
+      <div>
+        <div class="sh">
+          <div class="sh-l">
+            <span class="sh-title">Featured Teachers</span>
+          </div>
+          <a href="#" class="sh-link">Marketplace →</a>
+        </div>
+        <div class="teacher-list">
+          <div class="trow">
+            <div class="t-av">🇯🇵</div>
+            <div class="t-info"><div class="t-name">Yuki Matsuda</div><div class="t-sub">Japanese · 5 yrs · 248 lessons</div></div>
+            <div class="t-r"><span class="t-badge">Pro</span><span class="t-stars">★★★★★</span><span class="t-rate">$28/hr</span></div>
+          </div>
+          <div class="trow">
+            <div class="t-av">🇫🇷</div>
+            <div class="t-info"><div class="t-name">Marie Laurent</div><div class="t-sub">French, Spanish · 189 lessons</div></div>
+            <div class="t-r"><span class="t-badge">Pro</span><span class="t-stars">★★★★★</span><span class="t-rate">$32/hr</span></div>
+          </div>
+          <div class="trow">
+            <div class="t-av">🇰🇷</div>
+            <div class="t-info"><div class="t-name">Jiyeon Park</div><div class="t-sub">Korean, Japanese · 301 lessons</div></div>
+            <div class="t-r"><span class="t-badge">Top</span><span class="t-stars">★★★★★</span><span class="t-rate">$24/hr</span></div>
+          </div>
+          <div class="trow">
+            <div class="t-av">🇩🇪</div>
+            <div class="t-info"><div class="t-name">Anna Müller</div><div class="t-sub">German, French · 42 lessons</div></div>
+            <div class="t-r"><span class="t-badge g">New</span><span class="t-stars">★★★★★</span><span class="t-rate">$22/hr</span></div>
+          </div>
+          <div class="trow">
+            <div class="t-av">🇨🇳</div>
+            <div class="t-info"><div class="t-name">Wei Lin</div><div class="t-sub">Mandarin · 7 yrs · 412 lessons</div></div>
+            <div class="t-r"><span class="t-badge">Pro</span><span class="t-stars">★★★★★</span><span class="t-rate">$30/hr</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAID GROUP LESSONS -->
+      <div>
+        <div class="sh">
+          <div class="sh-l">
+            <span class="sh-title">Group Lessons</span>
+          </div>
+          <a href="#" class="sh-link">Browse all →</a>
+        </div>
+
+        <div class="group-lessons">
+
+          <!-- Lesson 1 — English in IT B2/C1 -->
+          <div class="gl-card">
+            <div class="gl-top-bar" style="background:linear-gradient(90deg,#4338CA,#6366F1)"></div>
+            <div class="gl-body">
+              <div class="gl-header">
+                <div class="gl-header-l">
+                  <div class="gl-tags">
+                    <span class="gl-tag lang">🇬🇧 English</span>
+                    <span class="gl-tag level-b2">B2 / C1</span>
+                    <span class="gl-tag it">💻 Tech & IT</span>
+                  </div>
+                  <div class="gl-title">English for IT Professionals — Sprint</div>
+                  <div class="gl-desc">Designed for software engineers, PMs, and designers who need confident English in daily tech work: standups, code reviews, incidents, and stakeholder meetings.</div>
+                  <div class="gl-plan">
+                    <div class="gl-plan-item"><span class="gl-plan-num">1.</span><span>Standup & sprint ceremonies — vocabulary and fluency drills</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">2.</span><span>Code review language — giving and receiving feedback professionally</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">3.</span><span>Incident management — clear, calm communication under pressure</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">4.</span><span>Technical writing: Slack messages, Notion docs, PRD summaries</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="gl-footer">
+                <div class="gl-footer-l">
+                  <div class="gl-teacher">
+                    <div class="gl-teacher-av">🇬🇧</div>
+                    <div>
+                      <div class="gl-teacher-name">James O.</div>
+                      <span class="gl-teacher-stars">★★★★★</span>
+                    </div>
+                  </div>
+                  <div class="gl-spots">
+                    <div class="spots-bar"><div class="spots-fill low" style="width:75%"></div></div>
+                    <span>9 / 12 joined</span>
+                  </div>
+                </div>
+                <div class="gl-price-block">
+                  <div>
+                    <div class="gl-price">$48</div>
+                    <div class="gl-price-sub">4 sessions · Tue & Thu</div>
+                  </div>
+                  <button class="book-btn" data-t="book">Book spot</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lesson 2 — JLPT N3 Prep -->
+          <div class="gl-card">
+            <div class="gl-top-bar" style="background:linear-gradient(90deg,#DC2626,#F87171)"></div>
+            <div class="gl-body">
+              <div class="gl-header">
+                <div class="gl-header-l">
+                  <div class="gl-tags">
+                    <span class="gl-tag lang">🇯🇵 Japanese</span>
+                    <span class="gl-tag level-b1">B1 / N3</span>
+                  </div>
+                  <div class="gl-title">JLPT N3 Exam Preparation</div>
+                  <div class="gl-desc">Structured 6-week program targeting grammar patterns, reading comprehension, and listening skills for N3 certification. Exam strategies included.</div>
+                  <div class="gl-plan">
+                    <div class="gl-plan-item"><span class="gl-plan-num">1.</span><span>N3 grammar patterns — て-form, causative, passive constructions</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">2.</span><span>Reading speed drills with authentic newspaper excerpts</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">3.</span><span>Listening comprehension — news audio and everyday conversations</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="gl-footer">
+                <div class="gl-footer-l">
+                  <div class="gl-teacher">
+                    <div class="gl-teacher-av">🇯🇵</div>
+                    <div>
+                      <div class="gl-teacher-name">Yuki M.</div>
+                      <span class="gl-teacher-stars">★★★★★</span>
+                    </div>
+                  </div>
+                  <div class="gl-spots">
+                    <div class="spots-bar"><div class="spots-fill" style="width:40%"></div></div>
+                    <span>4 / 10 joined</span>
+                  </div>
+                </div>
+                <div class="gl-price-block">
+                  <div>
+                    <div class="gl-price">$72</div>
+                    <div class="gl-price-sub">6 sessions · Mon & Wed</div>
+                  </div>
+                  <button class="book-btn" data-t="book">Book spot</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lesson 3 — French Conversation Club -->
+          <div class="gl-card">
+            <div class="gl-top-bar" style="background:linear-gradient(90deg,#0369A1,#38BDF8)"></div>
+            <div class="gl-body">
+              <div class="gl-header">
+                <div class="gl-header-l">
+                  <div class="gl-tags">
+                    <span class="gl-tag lang">🇫🇷 French</span>
+                    <span class="gl-tag level-b2">B2</span>
+                  </div>
+                  <div class="gl-title">French Contemporary Culture — Conversation</div>
+                  <div class="gl-desc">Weekly discussion group around French news, cinema, and society. Focus on natural spoken fluency, idiomatic expression, and debate vocabulary.</div>
+                  <div class="gl-plan">
+                    <div class="gl-plan-item"><span class="gl-plan-num">1.</span><span>La politique française — debating current events with nuance</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">2.</span><span>Cinéma contemporain — analyzing and discussing recent French films</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">3.</span><span>L'argot et les expressions — colloquial French used by native speakers today</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="gl-footer">
+                <div class="gl-footer-l">
+                  <div class="gl-teacher">
+                    <div class="gl-teacher-av">🇫🇷</div>
+                    <div>
+                      <div class="gl-teacher-name">Marie L.</div>
+                      <span class="gl-teacher-stars">★★★★★</span>
+                    </div>
+                  </div>
+                  <div class="gl-spots">
+                    <div class="spots-bar"><div class="spots-fill full" style="width:100%"></div></div>
+                    <span style="color:#DC2626;font-weight:500">8 / 8 — Full</span>
+                  </div>
+                </div>
+                <div class="gl-price-block">
+                  <div>
+                    <div class="gl-price">$36</div>
+                    <div class="gl-price-sub">3 sessions · Fridays</div>
+                  </div>
+                  <button class="book-btn full" data-t="waitlist">Join waitlist</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lesson 4 — Korean for Beginners -->
+          <div class="gl-card">
+            <div class="gl-top-bar" style="background:linear-gradient(90deg,#059669,#34D399)"></div>
+            <div class="gl-body">
+              <div class="gl-header">
+                <div class="gl-header-l">
+                  <div class="gl-tags">
+                    <span class="gl-tag lang">🇰🇷 Korean</span>
+                    <span class="gl-tag level-a2">A2</span>
+                  </div>
+                  <div class="gl-title">Korean Foundations — Hangul to Sentences</div>
+                  <div class="gl-desc">Practical A2 group for learners who know Hangul and basic vocab. Build real conversational ability through structured drills and roleplay scenarios.</div>
+                  <div class="gl-plan">
+                    <div class="gl-plan-item"><span class="gl-plan-num">1.</span><span>Sentence structure and particles — 은/는, 이/가, 을/를 in context</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">2.</span><span>Daily routines — shopping, directions, ordering food</span></div>
+                    <div class="gl-plan-item"><span class="gl-plan-num">3.</span><span>Honorifics introduction — when and how to use 존댓말</span></div>
+                  </div>
+                </div>
+              </div>
+              <div class="gl-footer">
+                <div class="gl-footer-l">
+                  <div class="gl-teacher">
+                    <div class="gl-teacher-av">🇰🇷</div>
+                    <div>
+                      <div class="gl-teacher-name">Jiyeon P.</div>
+                      <span class="gl-teacher-stars">★★★★★</span>
+                    </div>
+                  </div>
+                  <div class="gl-spots">
+                    <div class="spots-bar"><div class="spots-fill" style="width:20%"></div></div>
+                    <span>2 / 10 joined</span>
+                  </div>
+                </div>
+                <div class="gl-price-block">
+                  <div>
+                    <div class="gl-price">$40</div>
+                    <div class="gl-price-sub">4 sessions · Saturdays</div>
+                  </div>
+                  <button class="book-btn" data-t="book">Book spot</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /feed -->
+
+    <!-- ── SIDEBAR ── -->
+    <aside class="sidebar">
+
+      <button class="cta-tile" id="ctaBtn">
+        <div class="cta-glyph">🎙</div>
+        <div class="cta-title">Start a room</div>
+        <div class="cta-sub">Host your own live conversation. Set topics, manage speakers, invite your followers.</div>
+        <div class="cta-btn">Create room →</div>
+      </button>
+
+      <!-- Progress -->
+      <div class="sc" style="animation-delay:.08s">
+        <div class="sc-hd">
+          <span class="sc-title">My Progress</span>
+          <a href="#" class="sc-link">Details</a>
+        </div>
+        <div class="stats-g">
+          <div class="sg"><span class="sg-n">🔥 14</span><span class="sg-l">Streak</span></div>
+          <div class="sg"><span class="sg-n">4.2h</span><span class="sg-l">This week</span></div>
+          <div class="sg"><span class="sg-n">38</span><span class="sg-l">Sessions</span></div>
+          <div class="sg"><span class="sg-n">B2</span><span class="sg-l">Level</span></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--warm);border-radius:10px;border:1px solid var(--rule)">
+            <span style="font-size:12px;color:var(--dim)">Total hours practiced</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.3px">42.5 h</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--warm);border-radius:10px;border:1px solid var(--rule)">
+            <span style="font-size:12px;color:var(--dim)">Rooms joined</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.3px">38 rooms</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--warm);border-radius:10px;border:1px solid var(--rule)">
+            <span style="font-size:12px;color:var(--dim)">Teachers worked with</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.3px">6 teachers</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 12px;background:var(--warm);border-radius:10px;border:1px solid var(--rule)">
+            <span style="font-size:12px;color:var(--dim)">Group lessons completed</span>
+            <span style="font-size:13px;font-weight:600;color:var(--ink);letter-spacing:-0.3px">5 lessons</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="sc" style="animation-delay:.12s">
+        <div class="sc-hd">
+          <span class="sc-title">Upcoming</span>
+          <a href="#" class="sc-link">Schedule →</a>
+        </div>
+        <div class="up-row">
+          <div class="up-t"><div class="up-h">4</div><div class="up-a">PM</div></div>
+          <div class="up-info"><div class="up-title">1-on-1 with Yuki M.</div><div class="up-sub">Japanese · 45 min · $21</div></div>
+          <div class="up-dot" style="background:var(--fire)"></div>
+        </div>
+        <div class="up-row">
+          <div class="up-t"><div class="up-h">6</div><div class="up-a">PM</div></div>
+          <div class="up-info"><div class="up-title">French Cinema Club</div><div class="up-sub">Group room · 60 min</div></div>
+          <div class="up-dot" style="background:var(--green)"></div>
+        </div>
+        <div class="up-row">
+          <div class="up-t"><div class="up-h">9</div><div class="up-a">AM</div></div>
+          <div class="up-info"><div class="up-title">JLPT N3 — Lesson 3</div><div class="up-sub">Tomorrow · Bundle</div></div>
+          <div class="up-dot" style="background:var(--rule)"></div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="sc" style="animation-delay:.16s">
+        <div class="sc-hd">
+          <span class="sc-title">Messages</span>
+          <a href="#" class="sc-link">Open →</a>
+        </div>
+        <div class="msg">
+          <div class="m-av">🇯🇵<span class="m-online"></span></div>
+          <div class="m-info"><div class="m-name">Yuki M.</div><div class="m-prev">See you at 4! ✌️</div></div>
+          <div class="m-badge">2</div>
+        </div>
+        <div class="msg">
+          <div class="m-av">🇫🇷</div>
+          <div class="m-info"><div class="m-name">Marie L.</div><div class="m-prev">Your accent is improving 🎉</div></div>
+          <div class="m-badge">1</div>
+        </div>
+        <div class="msg">
+          <div class="m-av">🇰🇷<span class="m-online"></span></div>
+          <div class="m-info"><div class="m-name">Jiyeon P.</div><div class="m-prev">Can we reschedule Thursday?</div></div>
+        </div>
+      </div>
+
+      <!-- Suggested -->
+      <div class="sc" style="animation-delay:.20s">
+        <div class="sc-hd">
+          <span class="sc-title">Suggested</span>
+          <a href="#" class="sc-link">More</a>
+        </div>
+        <div class="sug">
+          <div class="sav2">🇧🇷</div>
+          <div class="s-info"><div class="s-name">Carlos Silva</div><div class="s-sub">🎓 Portuguese Teacher</div></div>
+          <button class="f-btn">Follow</button>
+        </div>
+        <div class="sug">
+          <div class="sav2">🇩🇪</div>
+          <div class="s-info"><div class="s-name">Anna Müller</div><div class="s-sub">🎓 German · New teacher</div></div>
+          <button class="f-btn">Follow</button>
+        </div>
+        <div class="sug">
+          <div class="sav2">🇨🇳</div>
+          <div class="s-info"><div class="s-name">Wei Lin</div><div class="s-sub">Mandarin · 412 sessions</div></div>
+          <button class="f-btn on">Following</button>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+</div>
+
+<script>
+// Nav items
+document.querySelectorAll('.nitem').forEach(t => {
+  t.addEventListener('click', function() {
+    document.querySelectorAll('.nitem').forEach(x => x.classList.remove('on'));
+    this.classList.add('on');
+  });
+});
+
+// Filter chips
+document.querySelectorAll('.fc').forEach(c => {
+  c.addEventListener('click', function() {
+    if (this.textContent.trim().startsWith('+')) return;
+    this.classList.toggle('on');
+  });
+});
+
+// Room action buttons
+document.querySelectorAll('.action-btn[data-t]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    const t = btn.dataset.t;
+    btn.style.pointerEvents = 'none';
+    if (t === 'join') {
+      btn.textContent = '✓ Joined';
+      btn.style.cssText += ';background:#15803D;box-shadow:none;';
+    } else if (t === 'wait') {
+      btn.textContent = '✓ On waitlist';
+      btn.style.opacity = '0.5';
+    } else {
+      btn.textContent = '✓ Reminder set';
+    }
+  });
+});
+
+// Book group lesson buttons
+document.querySelectorAll('.book-btn[data-t]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    if (btn.dataset.t === 'waitlist') {
+      btn.textContent = '✓ On waitlist';
+      btn.style.pointerEvents = 'none';
+      return;
+    }
+    btn.textContent = '✓ Booked!';
+    btn.style.background = '#15803D';
+    btn.style.boxShadow = 'none';
+    btn.style.pointerEvents = 'none';
+    // Update spots bar
+    const card = btn.closest('.gl-card');
+    const fill = card.querySelector('.spots-fill');
+    const spotsText = card.querySelector('.gl-spots span');
+    if (fill && spotsText) {
+      const cur = parseInt(fill.style.width);
+      fill.style.width = Math.min(cur + 10, 100) + '%';
+    }
+  });
+});
+
+// Follow
+document.querySelectorAll('.f-btn').forEach(b => {
+  b.addEventListener('click', function () {
+    this.classList.toggle('on');
+    this.textContent = this.classList.contains('on') ? 'Following' : 'Follow';
+  });
+});
+
+// Create room (both buttons)
+function fireCreateRoom(btn) {
+  const origText = btn.textContent || btn.innerHTML;
+  btn.style.pointerEvents = 'none';
+  if (btn.classList.contains('cta-btn')) {
+    btn.textContent = '✓ Room created!';
+    btn.style.background = '#15803D';
+  } else {
+    btn.textContent = '✓ Created!';
+    btn.style.background = '#15803D';
+  }
+  setTimeout(() => {
+    btn.textContent = origText;
+    btn.style.background = '';
+    btn.style.pointerEvents = '';
+  }, 2500);
+}
+document.getElementById('ctaBtn').addEventListener('click', function () {
+  fireCreateRoom(this.querySelector('.cta-btn'));
+});
+document.getElementById('startBtn').addEventListener('click', function () {
+  fireCreateRoom(this);
+});
+
+// Animate spots bars on load
+setTimeout(() => {
+  document.querySelectorAll('.spots-fill').forEach(el => {
+    const w = el.style.width;
+    el.style.width = '0';
+    requestAnimationFrame(() => setTimeout(() => { el.style.width = w; }, 50));
+  });
+}, 300);
+</script>
+</body>
+</html>

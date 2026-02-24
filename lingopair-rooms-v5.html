@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LingoPair — Rooms</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;1,9..144,300;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --fire: #E8420A;
+  --fire-2: #FF6535;
+  --fire-glow: rgba(232,66,10,0.15);
+  --fire-soft: rgba(232,66,10,0.08);
+  --page: #F8F5F2;
+  --white: #FFFFFF;
+  --ink: #1A1208;
+  --ink-2: #3B2A1E;
+  --dim: #8A7368;
+  --dim-2: #C4B8B0;
+  --rule: #E8E0DA;
+  --warm: #F2EDE8;
+  --green: #15803D;
+  --green-bg: rgba(21,128,61,0.09);
+  --amber: #B45309;
+  --amber-bg: rgba(180,83,9,0.09);
+  --blue: #1D4ED8;
+  --blue-bg: rgba(29,78,216,0.08);
+  --sp: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+html { font-size: 15px; }
+body {
+  font-family: 'Sora', system-ui, sans-serif;
+  background: var(--page);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+::-webkit-scrollbar { width: 0; height: 0; }
+
+/* ══════════════════════════
+   NAV
+══════════════════════════ */
+.nav {
+  position: sticky; top: 0; z-index: 300;
+  height: 52px; display: flex; align-items: center;
+  padding: 0 24px;
+  background: rgba(248,245,242,0.92);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-bottom: 1px solid var(--rule);
+}
+.nav-logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 19px; font-weight: 400; font-style: italic;
+  color: var(--ink); text-decoration: none;
+  letter-spacing: -0.3px; flex-shrink: 0; margin-right: 28px;
+}
+.nav-logo span { color: var(--fire); font-style: normal; }
+.nav-items { display: flex; align-items: center; gap: 1px; }
+.nitem {
+  padding: 5px 12px; border-radius: 8px;
+  font-size: 13px; font-weight: 400; color: var(--dim);
+  cursor: pointer; border: none; background: transparent;
+  font-family: 'Sora', sans-serif; letter-spacing: -0.1px;
+  white-space: nowrap; display: flex; align-items: center; gap: 5px;
+  transition: background 0.13s, color 0.13s;
+}
+.nitem:hover { background: var(--warm); color: var(--ink); }
+.nitem.on { background: var(--warm); color: var(--ink); font-weight: 500; }
+.nitem-pip { background: var(--fire); color: white; font-size: 9px; font-weight: 600; padding: 1px 5px; border-radius: 4px; }
+.nav-r { display: flex; align-items: center; gap: 6px; margin-left: auto; flex-shrink: 0; }
+.nsearch {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--warm); border: 1px solid transparent;
+  border-radius: 9px; padding: 6px 11px; width: 170px;
+  transition: all 0.2s var(--ease);
+}
+.nsearch:focus-within { background: white; border-color: var(--rule); width: 200px; box-shadow: 0 0 0 3px var(--fire-soft); }
+.nsearch svg { opacity: 0.3; flex-shrink: 0; }
+.nsearch input { border: none; outline: none; background: transparent; font-family: 'Sora', sans-serif; font-size: 12.5px; color: var(--ink); width: 100%; }
+.nsearch input::placeholder { color: var(--dim-2); }
+.nicon-btn { width: 31px; height: 31px; border-radius: 8px; border: none; background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--dim); transition: background 0.13s; position: relative; }
+.nicon-btn:hover { background: var(--warm); }
+.nidot { position: absolute; top: 5px; right: 5px; width: 6px; height: 6px; background: var(--fire); border-radius: 50%; border: 2px solid var(--page); }
+.nav-av { width: 29px; height: 29px; border-radius: 8px; background: linear-gradient(135deg, var(--fire), #FF7043); display: flex; align-items: center; justify-content: center; font-size: 10.5px; font-weight: 600; color: white; cursor: pointer; }
+
+/* ══════════════════════════
+   VIEW MANAGER
+══════════════════════════ */
+.view { display: none; }
+.view.active { display: block; }
+
+/* ══════════════════════════
+   ROOMS PAGE
+══════════════════════════ */
+.rooms-page { max-width: 860px; margin: 0 auto; padding: 32px 24px 80px; }
+
+.page-hd { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 24px; }
+.page-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 500; color: var(--ink); letter-spacing: -0.5px; line-height: 1.1; margin-bottom: 3px; }
+.page-sub { font-size: 13px; color: var(--dim); letter-spacing: -0.1px; }
+
+.create-room-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 11px 22px; border-radius: 11px;
+  background: var(--fire); color: white;
+  font-family: 'Sora', sans-serif; font-size: 14px; font-weight: 600; letter-spacing: -0.2px;
+  border: none; cursor: pointer;
+  box-shadow: 0 4px 20px rgba(232,66,10,0.34), 0 1px 3px rgba(232,66,10,0.2);
+  transition: background 0.18s, transform 0.2s var(--sp), box-shadow 0.2s;
+}
+.create-room-btn:hover { background: #CC3A08; transform: translateY(-2px); box-shadow: 0 8px 28px rgba(232,66,10,0.38); }
+
+.filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+.filter-chips { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.fc {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif; font-size: 11.5px; color: var(--dim);
+  cursor: pointer; transition: all 0.13s; letter-spacing: -0.1px;
+}
+.fc:hover { border-color: rgba(26,18,8,0.2); color: var(--ink); }
+.fc.on { background: var(--ink); color: white; border-color: var(--ink); font-weight: 500; }
+.fring { width: 5px; height: 5px; background: var(--green); border-radius: 50%; }
+.sort-select { display: flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 9px; border: 1px solid var(--rule); background: white; font-family: 'Sora', sans-serif; font-size: 12px; color: var(--dim); cursor: pointer; flex-shrink: 0; }
+.sort-select select { border: none; outline: none; background: transparent; font-family: 'Sora', sans-serif; font-size: 12px; color: var(--ink); cursor: pointer; }
+
+.rooms-section-label {
+  font-size: 10.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--dim-2); margin: 26px 0 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.rooms-section-label::before, .rooms-section-label::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+.rooms-section-label:first-child { margin-top: 0; }
+.live-badge { display: inline-flex; align-items: center; gap: 4px; background: var(--green-bg); color: var(--green); font-size: 10px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; padding: 2px 7px; border-radius: 5px; }
+.pulse-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pd 1.9s ease-in-out infinite; }
+@keyframes pd { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.4; transform:scale(.65); } }
+
+/* ══════════════════════════
+   ROOM CARD — MATCHES SCREENSHOT
+══════════════════════════ */
+.room-cards-list { display: flex; flex-direction: column; gap: 8px; }
+
+.room-card {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.25s var(--sp), box-shadow 0.25s var(--sp), border-color 0.18s;
+  animation: rise 0.35s var(--sp) both;
+}
+.room-card:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,18,8,0.08); border-color: rgba(26,18,8,0.1); }
+@keyframes rise { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* staggered animation delays */
+.room-card:nth-child(1) { animation-delay:.03s; }
+.room-card:nth-child(2) { animation-delay:.07s; }
+.room-card:nth-child(3) { animation-delay:.11s; }
+.room-card:nth-child(4) { animation-delay:.15s; }
+.room-card:nth-child(5) { animation-delay:.19s; }
+.room-card:nth-child(6) { animation-delay:.23s; }
+.room-card:nth-child(7) { animation-delay:.27s; }
+.room-card:nth-child(8) { animation-delay:.30s; }
+
+/* thin status bar at top */
+.rc-bar { height: 3px; }
+.rc-bar.live { background: linear-gradient(90deg,#15803D,#4ade80,#15803D); background-size:200%; animation: shimmer 3s linear infinite; }
+.rc-bar.soon { background: linear-gradient(90deg,#B45309,#fbbf24,#B45309); background-size:200%; animation: shimmer 4s linear infinite; }
+.rc-bar.sched { background: var(--rule); }
+@keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+
+.rc-inner { display: flex; align-items: flex-start; gap: 0; padding: 14px 16px; }
+
+/* left: avatar box */
+.rc-avatar {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--warm); border: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--ink-2);
+  letter-spacing: -0.5px; flex-shrink: 0; margin-right: 14px;
+  align-self: flex-start; margin-top: 2px;
+  font-family: 'Sora', sans-serif;
+}
+
+/* middle: content */
+.rc-content { flex: 1; min-width: 0; }
+
+.rc-meta-row {
+  display: flex; align-items: center; gap: 5px;
+  flex-wrap: wrap; margin-bottom: 5px;
+}
+
+/* tag atoms */
+.tag {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 10.5px; font-weight: 500; letter-spacing: -0.05px;
+  padding: 2px 7px; border-radius: 5px; line-height: 1.4;
+  white-space: nowrap;
+}
+.tag.teacher { background: var(--green-bg); color: var(--green); }
+.tag.lang {
+  background: var(--warm); color: var(--dim);
+  border: 1px solid var(--rule);
+  font-size: 10px;
+}
+.tag.lang .flag { font-size: 12px; }
+.tag.level { background: var(--blue-bg); color: var(--blue); font-weight: 600; }
+.tag.topic { background: var(--blue-bg); color: var(--blue); }
+.tag.paid { background: rgba(234,179,8,0.1); color: #854D0E; }
+.tag-sep { color: var(--dim-2); font-size: 10px; }
+
+.rc-title {
+  font-size: 14.5px; font-weight: 600; color: var(--ink);
+  letter-spacing: -0.3px; line-height: 1.3; margin-bottom: 3px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.rc-desc {
+  font-size: 12px; color: var(--dim); line-height: 1.55;
+  letter-spacing: -0.1px; margin-bottom: 10px;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
+}
+
+.rc-foot-row { display: flex; align-items: center; gap: 12px; }
+
+/* waveform icon + speakers */
+.spk-group { display: flex; align-items: center; gap: 5px; }
+.spk-av-sm {
+  width: 20px; height: 20px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; font-weight: 700; color: white;
+  flex-shrink: 0;
+}
+.wave-bars {
+  display: flex; align-items: center; gap: 1.5px; height: 12px;
+  margin-right: 1px;
+}
+.wb { width: 2px; border-radius: 2px; background: var(--green); }
+.wb.s { animation: wvs 0.9s ease-in-out infinite; }
+.wb:nth-child(1).s { height:3px; animation-delay:0s; }
+.wb:nth-child(2).s { height:9px; animation-delay:0.1s; }
+.wb:nth-child(3).s { height:5px; animation-delay:0.2s; }
+.wb:nth-child(4).s { height:11px; animation-delay:0.15s; }
+.wb:nth-child(5).s { height:4px; animation-delay:0.25s; }
+@keyframes wvs { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(0.3)} }
+
+.foot-stat { font-size: 11.5px; color: var(--dim-2); display: flex; align-items: center; gap: 4px; }
+.foot-dot { width: 3px; height: 3px; border-radius: 50%; background: var(--dim-2); }
+
+/* participant progress bar */
+.pax-bar-wrap { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+.pax-bar-track {
+  flex: 1; height: 4px; border-radius: 4px;
+  background: var(--rule); overflow: hidden; max-width: 120px;
+}
+.pax-bar-fill {
+  height: 100%; border-radius: 4px;
+  background: var(--amber);
+  transition: width 0.3s var(--ease);
+}
+.pax-bar-fill.full { background: var(--fire); }
+.pax-bar-fill.low { background: var(--green); }
+.pax-label { font-size: 11px; color: var(--dim-2); white-space: nowrap; letter-spacing: -0.1px; }
+
+/* right: status + action */
+.rc-right { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; flex-shrink: 0; margin-left: 12px; gap: 10px; min-width: 80px; }
+
+.status-live {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11.5px; font-weight: 500; color: var(--green);
+  white-space: nowrap;
+}
+.status-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pd 1.9s ease-in-out infinite; flex-shrink: 0; }
+.status-soon { font-size: 11.5px; font-weight: 500; color: var(--amber); white-space: nowrap; }
+.status-sched { font-size: 11px; color: var(--dim-2); white-space: nowrap; }
+
+.join-btn {
+  padding: 8px 18px; border-radius: 10px;
+  font-family: 'Sora', sans-serif; font-size: 13px; font-weight: 600;
+  letter-spacing: -0.2px; cursor: pointer; border: none;
+  background: var(--fire); color: white;
+  box-shadow: 0 2px 10px rgba(232,66,10,0.28);
+  transition: all 0.2s var(--sp); white-space: nowrap;
+}
+.join-btn:hover { background: #CC3A08; transform: scale(1.04); }
+.join-btn.wait { background: white; color: var(--ink); border: 1px solid var(--rule); box-shadow: none; font-weight: 500; }
+.join-btn.wait:hover { background: var(--warm); transform: none; }
+.join-btn.remind { background: transparent; color: var(--fire); border: 1px solid rgba(232,66,10,0.25); box-shadow: none; font-weight: 500; }
+.join-btn.remind:hover { background: var(--fire-soft); transform: none; }
+
+/* ══════════════════════════
+   CREATE ROOM PAGE
+══════════════════════════ */
+.create-page { max-width: 680px; margin: 0 auto; padding: 36px 24px 80px; }
+.create-hd { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
+.back-btn {
+  width: 34px; height: 34px; border-radius: 9px;
+  border: 1px solid var(--rule); background: white;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; color: var(--dim);
+  transition: background 0.13s, color 0.13s; flex-shrink: 0;
+}
+.back-btn:hover { background: var(--warm); color: var(--ink); }
+.create-title { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: var(--ink); letter-spacing: -0.4px; }
+.create-sub { font-size: 12.5px; color: var(--dim); margin-top: 2px; }
+
+.form-card { background: white; border: 1px solid var(--rule); border-radius: 20px; overflow: hidden; }
+.form-section { padding: 22px 26px; border-bottom: 1px solid var(--rule); }
+.form-section:last-child { border-bottom: none; }
+.fs-title { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.7px; color: var(--dim-2); margin-bottom: 14px; }
+
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+.field-label { font-size: 12.5px; font-weight: 500; color: var(--ink); margin-bottom: 7px; display: flex; align-items: center; gap: 6px; letter-spacing: -0.1px; }
+.field-hint { font-size: 11px; color: var(--dim-2); font-weight: 400; }
+
+.field-input {
+  width: 100%; padding: 10px 13px;
+  border: 1px solid var(--rule); border-radius: 10px;
+  background: var(--warm);
+  font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink);
+  outline: none; letter-spacing: -0.1px; resize: none;
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.field-input::placeholder { color: var(--dim-2); }
+.field-input:focus { border-color: rgba(232,66,10,0.35); background: white; box-shadow: 0 0 0 3px var(--fire-soft); }
+.field-input.textarea { min-height: 82px; line-height: 1.6; }
+.char-count { font-size: 11px; color: var(--dim-2); text-align: right; margin-top: 4px; }
+
+/* role selector */
+.role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.role-btn {
+  padding: 14px 16px; border-radius: 12px;
+  border: 1.5px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif; cursor: pointer; text-align: left;
+  transition: all 0.15s var(--sp);
+}
+.role-btn:hover { border-color: rgba(26,18,8,0.18); background: var(--warm); }
+.role-btn.on { border-color: var(--fire); background: var(--fire-soft); }
+.role-icon { font-size: 22px; margin-bottom: 7px; display: block; }
+.role-title { font-size: 13.5px; font-weight: 600; color: var(--ink); letter-spacing: -0.2px; margin-bottom: 2px; }
+.role-sub { font-size: 11px; color: var(--dim); line-height: 1.45; }
+.role-btn.on .role-title { color: var(--fire); }
+
+/* teacher extras */
+.teacher-extras { display: none; }
+.teacher-extras.show { display: block; }
+
+.price-row { display: flex; align-items: center; gap: 8px; }
+.price-toggle-wrap { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+.price-opt {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 8px;
+  border: 1px solid var(--rule); background: white;
+  font-family: 'Sora', sans-serif; font-size: 12.5px; font-weight: 400; color: var(--dim);
+  cursor: pointer; transition: all 0.14s;
+}
+.price-opt:hover { border-color: rgba(26,18,8,0.2); color: var(--ink); }
+.price-opt.on { border-color: var(--fire); background: var(--fire-soft); color: var(--fire); font-weight: 500; }
+
+.price-input-wrap { display: none; }
+.price-input-wrap.show { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.currency-label { font-size: 13px; color: var(--dim); font-weight: 500; }
+.price-input { width: 120px; }
+
+.max-people-row { display: flex; align-items: center; gap: 12px; margin-top: 0; }
+.stepper { display: flex; align-items: center; gap: 8px; }
+.step-btn {
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--rule); background: white;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; cursor: pointer; color: var(--dim);
+  transition: all 0.14s; line-height: 1; user-select: none;
+}
+.step-btn:hover { background: var(--warm); color: var(--ink); }
+.step-val { font-size: 20px; font-weight: 700; color: var(--ink); min-width: 30px; text-align: center; font-family: 'Fraunces', serif; letter-spacing: -0.5px; }
+.step-label { font-size: 12px; color: var(--dim); }
+
+/* language picker */
+.lang-selected-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; min-height: 0; }
+.lang-sel-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 5px 10px; border-radius: 8px;
+  background: var(--ink); color: white;
+  font-family: 'Sora', sans-serif; font-size: 12px; font-weight: 500;
+  animation: popIn 0.2s var(--bounce);
+}
+@keyframes popIn { from{opacity:0;transform:scale(0.82)} to{opacity:1;transform:scale(1)} }
+.lang-sel-x { cursor:pointer; opacity:0.5; font-size:13px; transition:opacity 0.13s; line-height:1; }
+.lang-sel-x:hover { opacity:1; }
+.lang-max-note { font-size:11px; color:var(--amber); margin-bottom:8px; display:none; }
+.lang-max-note.show { display:block; }
+
+.lang-search-wrap { position: relative; margin-bottom: 8px; }
+.lang-search-icon { position:absolute; left:11px; top:50%; transform:translateY(-50%); opacity:0.3; pointer-events:none; }
+.lang-search-input {
+  width: 100%; padding: 9px 13px 9px 36px;
+  border: 1px solid var(--rule); border-radius: 10px; background: var(--warm);
+  font-family: 'Sora', sans-serif; font-size: 13px; color: var(--ink);
+  outline: none; transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.lang-search-input:focus { border-color: rgba(232,66,10,0.35); background: white; box-shadow: 0 0 0 3px var(--fire-soft); }
+.lang-dropdown { border:1px solid var(--rule); border-radius:12px; background:white; overflow:hidden; max-height:200px; overflow-y:auto; box-shadow:0 4px 20px rgba(26,18,8,0.08); }
+.lang-dropdown::-webkit-scrollbar { width:4px; }
+.lang-dropdown::-webkit-scrollbar-thumb { background:var(--rule); border-radius:4px; }
+.lang-opt { display:flex; align-items:center; gap:9px; padding:8px 13px; cursor:pointer; font-family:'Sora',sans-serif; font-size:13px; color:var(--ink); transition:background 0.1s; user-select:none; }
+.lang-opt:hover { background:var(--warm); }
+.lang-opt.selected { background:var(--fire-soft); }
+.lang-opt.selected::after { content:'✓'; margin-left:auto; color:var(--fire); font-size:12px; font-weight:600; }
+.lang-opt.hidden { display:none; }
+.lang-opt-flag { font-size:18px; flex-shrink:0; }
+.lang-no-results { padding:14px; font-size:13px; color:var(--dim-2); text-align:center; display:none; }
+.lang-no-results.show { display:block; }
+
+/* level multi-select */
+.level-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
+.level-btn {
+  padding:9px 6px; border:1px solid var(--rule); border-radius:10px; background:white;
+  font-family:'Sora',sans-serif; font-size:12px; font-weight:400; color:var(--dim);
+  cursor:pointer; text-align:center; line-height:1.3; transition:all 0.15s var(--sp);
+}
+.level-btn span { display:block; font-size:9.5px; color:var(--dim-2); margin-top:1px; }
+.level-btn:hover { border-color:rgba(26,18,8,0.2); color:var(--ink); background:var(--warm); }
+.level-btn.on { background:var(--ink); color:white; border-color:var(--ink); font-weight:500; }
+.level-btn.on span { color:rgba(255,255,255,0.5); }
+.level-btn.all-levels { grid-column:1/-1; }
+.level-note { font-size:10.5px; color:var(--dim-2); margin-top:8px; line-height:1.55; display:flex; align-items:flex-start; gap:5px; }
+
+/* topic tags */
+.topic-grid { display:flex; flex-wrap:wrap; gap:6px; }
+.topic-btn {
+  display:inline-flex; align-items:center; gap:5px;
+  padding:6px 12px; border-radius:8px;
+  border:1px solid var(--rule); background:white;
+  font-family:'Sora',sans-serif; font-size:12px; color:var(--dim);
+  cursor:pointer; transition:all 0.14s var(--sp); user-select:none;
+}
+.topic-btn:hover { border-color:rgba(26,18,8,0.18); color:var(--ink); background:var(--warm); }
+.topic-btn.on { background:var(--ink); color:white; border-color:var(--ink); font-weight:500; }
+
+/* advanced options toggle */
+.adv-toggle {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 0; cursor:pointer;
+  font-size:13px; font-weight:500; color:var(--dim);
+  background:none; border:none; font-family:'Sora',sans-serif;
+  letter-spacing:-0.1px; transition:color 0.13s;
+  width:100%;
+}
+.adv-toggle:hover { color:var(--ink); }
+.adv-chevron { font-size:11px; transition:transform 0.2s var(--sp); display:inline-block; }
+.adv-toggle.open .adv-chevron { transform:rotate(180deg); }
+.adv-content { display:none; }
+.adv-content.show { display:block; }
+
+/* schedule toggle */
+.schedule-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.toggle-label { font-size:13px; font-weight:500; color:var(--ink); letter-spacing:-0.2px; }
+.toggle-sub { font-size:11.5px; color:var(--dim); }
+.toggle-switch { width:42px; height:24px; border-radius:12px; background:var(--rule); cursor:pointer; position:relative; transition:background 0.2s var(--ease); flex-shrink:0; border:none; }
+.toggle-switch.on { background:var(--fire); }
+.toggle-knob { width:18px; height:18px; border-radius:50%; background:white; position:absolute; top:3px; left:3px; box-shadow:0 1px 4px rgba(0,0,0,0.15); transition:transform 0.2s var(--sp); }
+.toggle-switch.on .toggle-knob { transform:translateX(18px); }
+.date-time-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.sched-fields { display:none; }
+.sched-fields.show { display:block; padding-bottom:2px; }
+
+/* field-select */
+.field-select-wrap { position:relative; }
+.field-select-wrap::after { content:'▾'; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:10px; color:var(--dim-2); pointer-events:none; }
+.field-select {
+  width:100%; padding:10px 30px 10px 13px;
+  border:1px solid var(--rule); border-radius:10px; background:var(--warm);
+  font-family:'Sora',sans-serif; font-size:13px; color:var(--ink);
+  outline:none; cursor:pointer; appearance:none; -webkit-appearance:none;
+  transition:border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.field-select:focus { border-color:rgba(232,66,10,0.35); background:white; box-shadow:0 0 0 3px var(--fire-soft); }
+
+/* tags input */
+.tags-input-wrap {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  padding:8px 12px; border:1px solid var(--rule); border-radius:10px;
+  background:var(--warm); cursor:text; min-height:44px;
+  transition:border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+.tags-input-wrap:focus-within { border-color:rgba(232,66,10,0.35); background:white; box-shadow:0 0 0 3px var(--fire-soft); }
+.tag-chip { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:6px; background:var(--ink); color:white; font-size:11.5px; font-weight:500; }
+.tag-chip-x { cursor:pointer; opacity:0.55; font-size:12px; transition:opacity 0.13s; }
+.tag-chip-x:hover { opacity:1; }
+.tags-real-input { border:none; outline:none; background:transparent; font-family:'Sora',sans-serif; font-size:12.5px; color:var(--ink); flex:1; min-width:80px; }
+.tags-real-input::placeholder { color:var(--dim-2); }
+
+/* ══════════════════════════
+   PREVIEW — MATCHES CARD STYLE
+══════════════════════════ */
+.preview-wrap { margin: 0 26px 0; }
+.preview-label-row { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.6px; color:var(--dim-2); margin-bottom:10px; }
+.preview-card { border:1px solid var(--rule); border-radius:16px; overflow:hidden; background:white; }
+.preview-card .rc-inner { padding:14px 16px; }
+.preview-card .rc-avatar { background:var(--warm); }
+
+/* submit zone */
+.preview-section { padding:22px 26px; border-bottom:1px solid var(--rule); }
+.submit-zone { padding:18px 26px; display:flex; align-items:center; justify-content:space-between; gap:12px; border-top:1px solid var(--rule); background:var(--warm); }
+.submit-hint { font-size:11.5px; color:var(--dim-2); line-height:1.5; max-width:320px; }
+.submit-actions { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.btn-secondary { padding:9px 18px; border-radius:10px; font-family:'Sora',sans-serif; font-size:13px; font-weight:500; background:white; color:var(--dim); border:1px solid var(--rule); cursor:pointer; transition:all 0.15s; }
+.btn-secondary:hover { color:var(--ink); border-color:rgba(26,18,8,0.18); }
+.btn-primary {
+  padding:9px 22px; border-radius:10px; font-family:'Sora',sans-serif;
+  font-size:13px; font-weight:600; letter-spacing:-0.2px;
+  background:var(--fire); color:white; border:none; cursor:pointer;
+  box-shadow:0 3px 14px rgba(232,66,10,0.28);
+  display:flex; align-items:center; gap:6px;
+  transition:background 0.18s, transform 0.2s var(--sp), box-shadow 0.2s;
+}
+.btn-primary:hover { background:#CC3A08; transform:translateY(-1px); box-shadow:0 6px 22px rgba(232,66,10,0.3); }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="#" class="nav-logo" onclick="showView('rooms');return false;">Lingo<span>Pair</span></a>
+  <div class="nav-items">
+    <button class="nitem" onclick="showView('home')">Home</button>
+    <button class="nitem on" onclick="showView('rooms')">🎙 Rooms</button>
+    <button class="nitem">Messages <span class="nitem-pip">3</span></button>
+    <button class="nitem">Marketplace</button>
+    <button class="nitem">Schedule</button>
+    <button class="nitem">Discover</button>
+  </div>
+  <div class="nav-r">
+    <div class="nsearch">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input type="text" placeholder="Search rooms…">
+    </div>
+    <button class="nicon-btn">🔔<span class="nidot"></span></button>
+    <div class="nav-av">YM</div>
+  </div>
+</nav>
+
+<!-- ══════════ ROOMS VIEW ══════════ -->
+<div class="view active" id="view-rooms">
+<div class="rooms-page">
+
+  <div class="page-hd">
+    <div>
+      <h1 class="page-title">Audio Rooms</h1>
+      <p class="page-sub">Live conversations happening now — join, listen, or speak</p>
+    </div>
+    <button class="create-room-btn" onclick="showView('create')">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Create a room
+    </button>
+  </div>
+
+  <div class="filter-bar">
+    <div class="filter-chips">
+      <button class="fc on"><span class="fring"></span> All rooms</button>
+      <button class="fc">🎙 Live now</button>
+      <button class="fc">⏳ Starting soon</button>
+      <button class="fc">📅 Scheduled</button>
+      <button class="fc">🇯🇵 Japanese</button>
+      <button class="fc">🇰🇷 Korean</button>
+      <button class="fc">🇫🇷 French</button>
+      <button class="fc">🇬🇧 English</button>
+      <button class="fc">+ More</button>
+    </div>
+    <div class="sort-select">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" opacity=".4"><path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <select><option>Most active</option><option>Newest</option><option>Fewest speakers</option><option>Starting soonest</option></select>
+    </div>
+  </div>
+
+  <!-- LIVE -->
+  <div class="rooms-section-label">
+    <span class="live-badge"><span class="pulse-dot"></span> Live now · 15 rooms</span>
+  </div>
+
+  <div class="room-cards-list">
+
+    <!-- helper macro: room(avatar, tags, title, desc, spk, lst, status, btnType, btnLabel) -->
+
+    <!-- 1 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">JP</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag teacher">🎓 Teacher</span>
+            <span class="tag lang"><span class="flag">🇯🇵</span> Japanese</span>
+            <span class="tag level">B2/C1</span>
+            <span class="tag topic">💼 Business</span>
+          </div>
+          <div class="rc-title">Japanese Business Vocabulary & Keigo</div>
+          <div class="rc-desc">Office culture, polite speech, and workplace vocabulary with native speakers from Tokyo.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#D97706">Y</div>
+              <div class="wave-bars"><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 14 listening</div>
+          </div>
+          <div class="pax-bar-wrap">
+            <div class="pax-bar-track"><div class="pax-bar-fill" style="width:67%"></div></div>
+            <span class="pax-label">16 / 24 joined</span>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">KR</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇬🇧</span> English</span>
+            <span class="tag level">B2/C1</span>
+            <span class="tag topic">💻 Tech & IT</span>
+          </div>
+          <div class="rc-title">K-Pop & Korean Culture Chat</div>
+          <div class="rc-desc">Casual conversation practice — artists, dramas, music in Korean. Supportive atmosphere.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#6366F1">J</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.2s"></div><div class="wb s" style="animation-delay:.05s"></div><div class="wb s" style="animation-delay:.28s"></div><div class="wb s" style="animation-delay:.12s"></div><div class="wb s" style="animation-delay:.35s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 7 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">EN</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag teacher">🎓 Teacher</span>
+            <span class="tag lang"><span class="flag">🇬🇧</span> English</span>
+            <span class="tag level">B2/C1</span>
+            <span class="tag topic">💻 Tech & IT</span>
+          </div>
+          <div class="rc-title">English for Developers — Live Q&A</div>
+          <div class="rc-desc">Tech vocabulary, presentation skills, remote meeting English. Certified coach hosting.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#059669">A</div>
+              <div class="wave-bars"><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div><div class="wb s"></div></div>
+            </div>
+            <div class="foot-stat">1 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 11 listening</div>
+          </div>
+          <div class="pax-bar-wrap">
+            <div class="pax-bar-track"><div class="pax-bar-fill" style="width:75%"></div></div>
+            <span class="pax-label">9 / 12 joined</span>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">PT</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇧🇷</span> Portuguese</span>
+            <span class="tag level">B1/B2</span>
+          </div>
+          <div class="rc-title">Brazilian Portuguese Flow</div>
+          <div class="rc-desc">Fluid conversation for intermediate speakers. Colloquial phrases, cultural stories, slang.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#DC2626">L</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.1s"></div><div class="wb s" style="animation-delay:.22s"></div><div class="wb s" style="animation-delay:.08s"></div><div class="wb s" style="animation-delay:.18s"></div><div class="wb s" style="animation-delay:.3s"></div></div>
+            </div>
+            <div class="foot-stat">3 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 5 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">FR</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇫🇷</span> French</span>
+            <span class="tag level">C1</span>
+            <span class="tag topic">🗣 Debate</span>
+          </div>
+          <div class="rc-title">French Debate Club — L'IA dans la société</div>
+          <div class="rc-desc">Structured debate on AI in society. Advanced vocabulary, argument building, rebuttals.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#7C3AED">M</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.05s"></div><div class="wb s" style="animation-delay:.2s"></div><div class="wb s" style="animation-delay:.32s"></div><div class="wb s" style="animation-delay:.14s"></div><div class="wb s" style="animation-delay:.25s"></div></div>
+            </div>
+            <div class="foot-stat">4 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 9 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">ES</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇪🇸</span> Spanish</span>
+            <span class="tag level">A1/A2</span>
+            <span class="tag topic">✈️ Travel</span>
+          </div>
+          <div class="rc-title">Spanish from Zero — Slow & Clear</div>
+          <div class="rc-desc">Very slow-paced room for absolute beginners. Greetings, numbers, basic phrases. Patient host.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#D97706">C</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.15s"></div><div class="wb s" style="animation-delay:.07s"></div><div class="wb s" style="animation-delay:.28s"></div><div class="wb s" style="animation-delay:.2s"></div><div class="wb s" style="animation-delay:.04s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 12 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">DE</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇩🇪</span> German</span>
+            <span class="tag level">B1/B2</span>
+          </div>
+          <div class="rc-title">German Stammtisch — Freies Gespräch</div>
+          <div class="rc-desc">Casual unstructured conversation. Any topic goes. Native and advanced learners mixing freely.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#0891B2">H</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.25s"></div><div class="wb s" style="animation-delay:.1s"></div><div class="wb s" style="animation-delay:.35s"></div><div class="wb s" style="animation-delay:.05s"></div><div class="wb s" style="animation-delay:.18s"></div></div>
+            </div>
+            <div class="foot-stat">5 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 6 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">IT</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇮🇹</span> Italian</span>
+            <span class="tag level">A2/B1</span>
+            <span class="tag topic">✈️ Travel</span>
+          </div>
+          <div class="rc-title">Italian for Travelers — Survival Phrases</div>
+          <div class="rc-desc">Restaurants, transport, shopping. Essential phrases for your next trip to Italy.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#BE185D">S</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.08s"></div><div class="wb s" style="animation-delay:.3s"></div><div class="wb s" style="animation-delay:.15s"></div><div class="wb s" style="animation-delay:.22s"></div><div class="wb s" style="animation-delay:.02s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 8 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">ZH</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇨🇳</span> Mandarin</span>
+            <span class="tag level">B1/B2</span>
+          </div>
+          <div class="rc-title">Mandarin Conversation — Daily Life Topics</div>
+          <div class="rc-desc">Talk about food, family, travel. Natural flow and tone correction. HSK 3–4 range.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#DC2626">W</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.18s"></div><div class="wb s" style="animation-delay:.08s"></div><div class="wb s" style="animation-delay:.28s"></div><div class="wb s" style="animation-delay:.04s"></div><div class="wb s" style="animation-delay:.22s"></div></div>
+            </div>
+            <div class="foot-stat">3 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 10 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">AR</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇸🇦</span> Arabic</span>
+            <span class="tag level">A1</span>
+          </div>
+          <div class="rc-title">Modern Standard Arabic — Introduction</div>
+          <div class="rc-desc">Alphabet, pronunciation and basic greetings. Slow pace, patient host. Zero experience welcome.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#059669">K</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.3s"></div><div class="wb s" style="animation-delay:.12s"></div><div class="wb s" style="animation-delay:.24s"></div><div class="wb s" style="animation-delay:.06s"></div><div class="wb s" style="animation-delay:.18s"></div></div>
+            </div>
+            <div class="foot-stat">1 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 16 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">JP</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇯🇵</span> Japanese</span>
+            <span class="tag level">A1/A2</span>
+          </div>
+          <div class="rc-title">Hiragana & Katakana Reading Practice</div>
+          <div class="rc-desc">Read aloud practice for new learners. Host corrects pronunciation in real time. Very welcoming.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#7C3AED">R</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.06s"></div><div class="wb s" style="animation-delay:.24s"></div><div class="wb s" style="animation-delay:.14s"></div><div class="wb s" style="animation-delay:.32s"></div><div class="wb s" style="animation-delay:.08s"></div></div>
+            </div>
+            <div class="foot-stat">3 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 4 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 12 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">NL</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇳🇱</span> Dutch</span>
+            <span class="tag level">A2/B1</span>
+          </div>
+          <div class="rc-title">Dutch for English Speakers — Basics</div>
+          <div class="rc-desc">Pronunciation is half the battle. Sounds that trip English speakers up — with exercises.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#D97706">N</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.12s"></div><div class="wb s" style="animation-delay:.28s"></div><div class="wb s" style="animation-delay:.06s"></div><div class="wb s" style="animation-delay:.2s"></div><div class="wb s" style="animation-delay:.34s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 3 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 13 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">KR</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇰🇷</span> Korean</span>
+            <span class="tag level">B1/B2</span>
+            <span class="tag topic">🎬 Drama</span>
+          </div>
+          <div class="rc-title">Korean Drama Vocabulary — 이상한 변호사 우영우</div>
+          <div class="rc-desc">Scenes from Extraordinary Attorney Woo. Idiomatic phrases and legal vocabulary unpacked.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#BE185D">P</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.22s"></div><div class="wb s" style="animation-delay:.06s"></div><div class="wb s" style="animation-delay:.16s"></div><div class="wb s" style="animation-delay:.30s"></div><div class="wb s" style="animation-delay:.10s"></div></div>
+            </div>
+            <div class="foot-stat">4 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 19 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 14 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">PL</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇵🇱</span> Polish</span>
+            <span class="tag level">All levels</span>
+          </div>
+          <div class="rc-title">Polish Pronunciation & Cases Clinic</div>
+          <div class="rc-desc">Open session — bring your toughest words or grammar questions. Native speaker hosting.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#0891B2">T</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.3s"></div><div class="wb s" style="animation-delay:.16s"></div><div class="wb s" style="animation-delay:.08s"></div><div class="wb s" style="animation-delay:.26s"></div><div class="wb s" style="animation-delay:.04s"></div></div>
+            </div>
+            <div class="foot-stat">2 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 7 listening</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 15 -->
+    <div class="room-card">
+      <div class="rc-bar live"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">EN</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag teacher">🎓 Teacher</span>
+            <span class="tag lang"><span class="flag">🇬🇧</span> English</span>
+            <span class="tag level">B2/C1</span>
+            <span class="tag topic">📝 IELTS</span>
+          </div>
+          <div class="rc-title">IELTS Speaking Practice — Band 7+</div>
+          <div class="rc-desc">Part 2 long turn and Part 3 discussion practice. Peer feedback, timing, fluency drills.</div>
+          <div class="rc-foot-row">
+            <div class="spk-group">
+              <div class="spk-av-sm" style="background:#059669">F</div>
+              <div class="wave-bars"><div class="wb s" style="animation-delay:.1s"></div><div class="wb s" style="animation-delay:.26s"></div><div class="wb s" style="animation-delay:.18s"></div><div class="wb s" style="animation-delay:.04s"></div><div class="wb s" style="animation-delay:.32s"></div></div>
+            </div>
+            <div class="foot-stat">3 speaking</div>
+            <div class="foot-dot"></div>
+            <div class="foot-stat">👂 8 listening</div>
+          </div>
+          <div class="pax-bar-wrap">
+            <div class="pax-bar-track"><div class="pax-bar-fill full" style="width:92%"></div></div>
+            <span class="pax-label">11 / 12 joined</span>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-live"><span class="status-live-dot"></span> Live</div>
+          <button class="join-btn" data-t="join">Join →</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /room-cards-list live -->
+
+  <!-- STARTING SOON -->
+  <div class="rooms-section-label">Starting soon · 2 rooms</div>
+  <div class="room-cards-list">
+    <div class="room-card">
+      <div class="rc-bar soon"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">ES</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag teacher">🎓 Teacher</span>
+            <span class="tag lang"><span class="flag">🇪🇸</span> Spanish</span>
+            <span class="tag topic">✈️ Travel</span>
+          </div>
+          <div class="rc-title">Spanish for Travelers</div>
+          <div class="rc-desc">Airports, hotels, restaurants. Hosted by Maria G., certified teacher. Waiting area open.</div>
+          <div class="rc-foot-row">
+            <div class="foot-stat">12 joined · waitlist open</div>
+          </div>
+          <div class="pax-bar-wrap">
+            <div class="pax-bar-track"><div class="pax-bar-fill full" style="width:100%"></div></div>
+            <span class="pax-label">12 / 12 joined · full</span>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-soon">⏳ In 8 min</div>
+          <button class="join-btn wait" data-t="wait">Join waitlist</button>
+        </div>
+      </div>
+    </div>
+    <div class="room-card">
+      <div class="rc-bar soon"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">DE</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇩🇪</span> German</span>
+            <span class="tag level">A2/B1</span>
+          </div>
+          <div class="rc-title">German Grammar Workshop</div>
+          <div class="rc-desc">Dative vs accusative, tricky articles and adjective endings. Drill session, corrections expected.</div>
+          <div class="rc-foot-row">
+            <div class="foot-stat">6 joined</div>
+          </div>
+        </div>
+        <div class="rc-right">
+          <div class="status-soon">⏳ In 14 min</div>
+          <button class="join-btn wait" data-t="wait">Join waitlist</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCHEDULED -->
+  <div class="rooms-section-label">Scheduled today · 2 rooms</div>
+  <div class="room-cards-list">
+    <div class="room-card">
+      <div class="rc-bar sched"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">FR</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇫🇷</span> French</span>
+            <span class="tag level">All levels</span>
+            <span class="tag topic">🎬 Cinema</span>
+          </div>
+          <div class="rc-title">French Cinema Club — Amélie</div>
+          <div class="rc-desc">Weekly film discussion. Watch the film first. Relaxed, slow-paced conversation.</div>
+          <div class="rc-foot-row"><div class="foot-stat">8 signed up</div></div>
+        </div>
+        <div class="rc-right">
+          <div class="status-sched">Today 6 PM</div>
+          <button class="join-btn remind" data-t="remind">🔔 Remind me</button>
+        </div>
+      </div>
+    </div>
+    <div class="room-card">
+      <div class="rc-bar sched"></div>
+      <div class="rc-inner">
+        <div class="rc-avatar">ZH</div>
+        <div class="rc-content">
+          <div class="rc-meta-row">
+            <span class="tag lang"><span class="flag">🇨🇳</span> Mandarin</span>
+            <span class="tag level">B2/C1</span>
+          </div>
+          <div class="rc-title">Mandarin Tones — Focus Session</div>
+          <div class="rc-desc">Targeted practice on all four tones with minimal pairs and sentence drills.</div>
+          <div class="rc-foot-row"><div class="foot-stat">4 signed up</div></div>
+        </div>
+        <div class="rc-right">
+          <div class="status-sched">Today 8 PM</div>
+          <button class="join-btn remind" data-t="remind">🔔 Remind me</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /rooms-page -->
+</div><!-- /view-rooms -->
+
+<!-- ══════════ CREATE ROOM VIEW ══════════ -->
+<div class="view" id="view-create">
+<div class="create-page">
+
+  <div class="create-hd">
+    <button class="back-btn" onclick="showView('rooms')">←</button>
+    <div>
+      <h1 class="create-title">Create a room</h1>
+      <p class="create-sub">Set up a live audio conversation for others to join</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+
+    <!-- ── ROLE ── -->
+    <div class="form-section">
+      <div class="fs-title">Your role</div>
+      <div class="role-grid">
+        <button class="role-btn on" id="roleStudent" onclick="selectRole('student')">
+          <span class="role-icon">🎓</span>
+          <div class="role-title">Student</div>
+          <div class="role-sub">I'm learning a language and want to practise with others.</div>
+        </button>
+        <button class="role-btn" id="roleTeacher" onclick="selectRole('teacher')">
+          <span class="role-icon">👨‍🏫</span>
+          <div class="role-title">Teacher</div>
+          <div class="role-sub">I'm a qualified teacher or native speaker hosting a session.</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── BASICS ── -->
+    <div class="form-section">
+      <div class="fs-title">Basics</div>
+      <div class="field">
+        <label class="field-label">Room title <span class="field-hint">Keep it clear and specific</span></label>
+        <input type="text" class="field-input" id="titleInput" placeholder="e.g. English for IT Professionals — B2/C1" maxlength="80" oninput="onTitleInput(this)">
+        <div class="char-count"><span id="titleCount">0</span> / 80</div>
+      </div>
+      <div class="field">
+        <label class="field-label">Description</label>
+        <textarea class="field-input textarea" id="descInput" placeholder="Describe what you'll discuss, the format, and who it's for." maxlength="280" oninput="onDescInput(this)"></textarea>
+        <div class="char-count"><span id="descCount">0</span> / 280</div>
+      </div>
+    </div>
+
+    <!-- ── LANGUAGE ── -->
+    <div class="form-section">
+      <div class="fs-title">Language</div>
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">Languages practiced <span class="field-hint">Up to 3</span></label>
+        <div class="lang-selected-chips" id="langSelectedChips">
+          <span class="lang-sel-chip">🇰🇷 Korean <span class="lang-sel-x" onclick="deselectLang('Korean')">×</span></span>
+        </div>
+        <div class="lang-max-note" id="langMaxNote">Maximum 3 languages selected.</div>
+        <div class="lang-search-wrap">
+          <svg class="lang-search-icon" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <input type="text" class="lang-search-input" id="langSearchInput" placeholder="Search languages…" oninput="filterLangs(this.value)" onfocus="showLangDropdown()" onblur="setTimeout(hideLangDropdown,160)">
+        </div>
+        <div class="lang-dropdown" id="langDropdown" style="display:none">
+          <div class="lang-no-results" id="langNoResults">No languages found</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LEVEL ── -->
+    <div class="form-section">
+      <div class="fs-title">Level</div>
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">Who is this room for? <span class="field-hint">Select one or more — shown as B1/B2</span></label>
+        <div class="level-grid">
+          <button class="level-btn all-levels" id="lvlAll" onclick="toggleLevel(this,'All levels')">All levels<span>Everyone welcome</span></button>
+          <button class="level-btn" id="lvlA1" onclick="toggleLevel(this,'A1')">A1<span>Absolute beginner</span></button>
+          <button class="level-btn" id="lvlA2" onclick="toggleLevel(this,'A2')">A2<span>Elementary</span></button>
+          <button class="level-btn on" id="lvlB1" onclick="toggleLevel(this,'B1')">B1<span>Intermediate</span></button>
+          <button class="level-btn on" id="lvlB2" onclick="toggleLevel(this,'B2')">B2<span>Upper-intermediate</span></button>
+          <button class="level-btn" id="lvlC1" onclick="toggleLevel(this,'C1')">C1<span>Advanced</span></button>
+          <button class="level-btn" id="lvlC2" onclick="toggleLevel(this,'C2')">C2<span>Mastery</span></button>
+        </div>
+        <div class="level-note"><span>ℹ</span><span>For languages like Japanese or Korean without CEFR, use these as general ability levels and describe further in your title or description.</span></div>
+      </div>
+    </div>
+
+    <!-- ── TEACHER EXTRAS ── -->
+    <div class="form-section teacher-extras" id="teacherExtras">
+      <div class="fs-title">Teacher settings</div>
+
+      <div class="field">
+        <label class="field-label">Room access</label>
+        <div class="price-toggle-wrap">
+          <button class="price-opt on" id="priceFree" onclick="selectPrice('free')">🆓 Free</button>
+          <button class="price-opt" id="pricePaid" onclick="selectPrice('paid')">💳 Paid</button>
+        </div>
+        <div class="price-input-wrap" id="priceInputWrap">
+          <span class="currency-label">$</span>
+          <input type="number" class="field-input price-input" id="priceInput" placeholder="0.00" min="0" step="0.5" oninput="updatePreview()">
+          <span class="currency-label">per person</span>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:0">
+        <label class="field-label">Max participants</label>
+        <div class="max-people-row">
+          <div class="stepper">
+            <button class="step-btn" onclick="changeMax(-1)">−</button>
+            <div class="step-val" id="maxVal">20</div>
+            <button class="step-btn" onclick="changeMax(1)">+</button>
+          </div>
+          <div class="step-label">people maximum. After that, new joiners see a waitlist.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ADVANCED OPTIONS (collapsed) ── -->
+    <div class="form-section">
+      <button class="adv-toggle" id="advToggle" onclick="toggleAdv()">
+        <span>⚙ Advanced options</span>
+        <span class="adv-chevron" style="margin-left:auto">▾</span>
+      </button>
+      <div class="adv-content" id="advContent">
+
+        <!-- Topics -->
+        <div style="border-top:1px solid var(--rule);padding-top:18px;margin-top:4px">
+          <div class="fs-title" style="margin-bottom:12px">Topic</div>
+          <div class="topic-grid">
+            <button class="topic-btn" onclick="toggleTopic(this,'💻 Tech & IT')">💻 Tech & IT</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'💼 Business')">💼 Business</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'✈️ Travel')">✈️ Travel</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🎬 Drama & Film')">🎬 Drama & Film</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🎵 Music & Pop')">🎵 Music & Pop</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'📰 News & Culture')">📰 News & Culture</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'📝 Exam Prep')">📝 Exam Prep</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🗣 Debate')">🗣 Debate</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'👶 Kids & Families')">👶 Kids & Families</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🍳 Food & Cooking')">🍳 Food & Cooking</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🏃 Sports & Fitness')">🏃 Sports & Fitness</button>
+            <button class="topic-btn" onclick="toggleTopic(this,'🎮 Gaming')">🎮 Gaming</button>
+          </div>
+        </div>
+
+        <!-- Schedule -->
+        <div style="border-top:1px solid var(--rule);padding-top:18px;margin-top:18px">
+          <div class="fs-title" style="margin-bottom:12px">Schedule</div>
+          <div class="schedule-row">
+            <div>
+              <div class="toggle-label">Schedule for later</div>
+              <div class="toggle-sub">Off = start immediately when you go live</div>
+            </div>
+            <button class="toggle-switch" id="schedToggle" onclick="toggleSchedule()">
+              <div class="toggle-knob"></div>
+            </button>
+          </div>
+          <div class="sched-fields" id="schedFields">
+            <div class="date-time-row" style="margin-bottom:10px">
+              <div class="field" style="margin-bottom:0">
+                <label class="field-label">Date</label>
+                <input type="date" class="field-input">
+              </div>
+              <div class="field" style="margin-bottom:0">
+                <label class="field-label">Time</label>
+                <input type="time" class="field-input">
+              </div>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="field-label">Estimated duration</label>
+              <div class="field-select-wrap" style="max-width:200px">
+                <select class="field-select">
+                  <option>30 minutes</option><option selected>45 minutes</option>
+                  <option>60 minutes</option><option>90 minutes</option><option>Open-ended</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </div><!-- /adv-content -->
+    </div>
+
+    <!-- ── LIVE PREVIEW ── -->
+    <div class="preview-section">
+      <div class="preview-label-row">Preview — how your room will look</div>
+      <div class="preview-card">
+        <div class="rc-bar live"></div>
+        <div class="rc-inner">
+          <div class="rc-avatar" id="pvAvatar">?</div>
+          <div class="rc-content">
+            <div class="rc-meta-row" id="pvMetaRow">
+              <span class="tag lang" id="pvLang"><span class="flag">🌐</span> Language</span>
+              <span class="tag level" id="pvLevel">B1/B2</span>
+            </div>
+            <div class="rc-title" id="pvTitle" style="color:var(--dim-2);font-weight:400">Your room title will appear here</div>
+            <div class="rc-desc" id="pvDesc" style="display:none"></div>
+            <div class="rc-foot-row" style="margin-top:8px">
+              <div class="foot-stat" style="color:var(--dim-2);font-size:11px">Waiting for participants…</div>
+            </div>
+            <div class="pax-bar-wrap" id="pvPaxBar" style="display:none">
+              <div class="pax-bar-track"><div class="pax-bar-fill low" id="pvPaxFill" style="width:0%"></div></div>
+              <span class="pax-label" id="pvPaxLabel">0 / 20 joined</span>
+            </div>
+          </div>
+          <div class="rc-right">
+            <div class="status-live"><span class="status-live-dot"></span> Live</div>
+            <button class="join-btn" style="pointer-events:none;opacity:.7">Join →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUBMIT ── -->
+    <div class="submit-zone">
+      <div class="submit-hint">Room will be visible to all LingoPair members. Followers notified when you go live.</div>
+      <div class="submit-actions">
+        <button class="btn-secondary" onclick="showView('rooms')">Cancel</button>
+        <button class="btn-primary" id="submitBtn" onclick="handleCreate()">
+          <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 1 0 10 0A5 5 0 0 0 3 8z" fill="rgba(255,255,255,0.3)"/><circle cx="8" cy="8" r="2" fill="white"/></svg>
+          Go live now
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /form-card -->
+</div><!-- /create-page -->
+</div><!-- /view-create -->
+
+<script>
+/* ══════════════════════════
+   VIEW SWITCHING
+══════════════════════════ */
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  document.querySelectorAll('.nitem').forEach(n => n.classList.remove('on'));
+  if (name === 'rooms' || name === 'create') document.querySelectorAll('.nitem')[1].classList.add('on');
+}
+
+/* ── Filter chips ── */
+document.querySelectorAll('.fc').forEach(c => {
+  c.addEventListener('click', function() {
+    if (this.textContent.trim() === '+ More') return;
+    this.classList.toggle('on');
+  });
+});
+
+/* ── Room action buttons ── */
+document.querySelectorAll('.join-btn[data-t]').forEach(btn => {
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    btn.style.pointerEvents = 'none';
+    const t = btn.dataset.t;
+    if (t === 'join') { btn.textContent = '✓ Joined'; btn.style.background = '#15803D'; btn.style.boxShadow = 'none'; }
+    else if (t === 'wait') { btn.textContent = '✓ Waitlisted'; btn.style.opacity = '.55'; }
+    else { btn.textContent = '✓ Set'; }
+  });
+});
+
+/* ══════════════════════════
+   ROLE SELECTOR
+══════════════════════════ */
+let currentRole = 'student';
+function selectRole(role) {
+  currentRole = role;
+  document.getElementById('roleStudent').classList.toggle('on', role === 'student');
+  document.getElementById('roleTeacher').classList.toggle('on', role === 'teacher');
+  const te = document.getElementById('teacherExtras');
+  te.classList.toggle('show', role === 'teacher');
+  updateSubmitBtn();
+  updatePreview();
+}
+
+/* ══════════════════════════
+   LANGUAGE PICKER
+══════════════════════════ */
+const ALL_LANGS = [
+  {flag:'🇿🇦',name:'Afrikaans'},{flag:'🇸🇦',name:'Arabic'},{flag:'🇦🇿',name:'Azerbaijani'},
+  {flag:'🇧🇾',name:'Belarusian'},{flag:'🇧🇩',name:'Bengali'},{flag:'🇧🇦',name:'Bosnian'},
+  {flag:'🇧🇬',name:'Bulgarian'},{flag:'🇲🇲',name:'Burmese'},{flag:'🇨🇳',name:'Cantonese'},
+  {flag:'🇭🇷',name:'Croatian'},{flag:'🇨🇿',name:'Czech'},{flag:'🇩🇰',name:'Danish'},
+  {flag:'🇳🇱',name:'Dutch'},{flag:'🇬🇧',name:'English'},{flag:'🇪🇪',name:'Estonian'},
+  {flag:'🇵🇭',name:'Filipino'},{flag:'🇫🇮',name:'Finnish'},{flag:'🇫🇷',name:'French'},
+  {flag:'🇬🇪',name:'Georgian'},{flag:'🇩🇪',name:'German'},{flag:'🇬🇷',name:'Greek'},
+  {flag:'🇮🇳',name:'Gujarati'},{flag:'🇭🇹',name:'Haitian Creole'},{flag:'🇮🇱',name:'Hebrew'},
+  {flag:'🇮🇳',name:'Hindi'},{flag:'🇭🇺',name:'Hungarian'},{flag:'🇮🇸',name:'Icelandic'},
+  {flag:'🇮🇩',name:'Indonesian'},{flag:'🇮🇪',name:'Irish'},{flag:'🇮🇹',name:'Italian'},
+  {flag:'🇯🇵',name:'Japanese'},{flag:'🇮🇳',name:'Kannada'},{flag:'🇰🇿',name:'Kazakh'},
+  {flag:'🇰🇭',name:'Khmer'},{flag:'🇰🇷',name:'Korean'},{flag:'🇱🇦',name:'Lao'},
+  {flag:'🇱🇻',name:'Latvian'},{flag:'🇱🇹',name:'Lithuanian'},{flag:'🇲🇰',name:'Macedonian'},
+  {flag:'🇲🇾',name:'Malay'},{flag:'🇮🇳',name:'Malayalam'},{flag:'🇨🇳',name:'Mandarin'},
+  {flag:'🇮🇳',name:'Marathi'},{flag:'🇲🇳',name:'Mongolian'},{flag:'🇳🇵',name:'Nepali'},
+  {flag:'🇳🇴',name:'Norwegian'},{flag:'🇮🇷',name:'Persian'},{flag:'🇵🇱',name:'Polish'},
+  {flag:'🇧🇷',name:'Portuguese'},{flag:'🇵🇰',name:'Punjabi'},{flag:'🇷🇴',name:'Romanian'},
+  {flag:'🇷🇺',name:'Russian'},{flag:'🇷🇸',name:'Serbian'},{flag:'🇸🇮',name:'Slovenian'},
+  {flag:'🇸🇴',name:'Somali'},{flag:'🇿🇦',name:'Swahili'},{flag:'🇸🇪',name:'Swedish'},
+  {flag:'🇮🇳',name:'Tamil'},{flag:'🇮🇳',name:'Telugu'},{flag:'🇹🇭',name:'Thai'},
+  {flag:'🇹🇷',name:'Turkish'},{flag:'🇺🇦',name:'Ukrainian'},{flag:'🇵🇰',name:'Urdu'},
+  {flag:'🇺🇿',name:'Uzbek'},{flag:'🇻🇳',name:'Vietnamese'},{flag:'🏴󠁧󠁢󠁷󠁬󠁳󠁿',name:'Welsh'},
+  {flag:'🇮🇱',name:'Yiddish'},
+];
+
+const selectedLangs = new Set(['Korean']);
+
+function buildDropdown() {
+  const dd = document.getElementById('langDropdown');
+  dd.innerHTML = '<div class="lang-no-results" id="langNoResults">No languages found</div>';
+  ALL_LANGS.forEach(l => {
+    const div = document.createElement('div');
+    div.className = 'lang-opt' + (selectedLangs.has(l.name) ? ' selected' : '');
+    div.dataset.name = l.name;
+    div.innerHTML = `<span class="lang-opt-flag">${l.flag}</span>${l.name}`;
+    div.addEventListener('mousedown', e => { e.preventDefault(); toggleLangByName(l.name, l.flag); });
+    dd.appendChild(div);
+  });
+}
+
+function filterLangs(q) {
+  q = q.toLowerCase().trim();
+  let vis = 0;
+  document.querySelectorAll('.lang-opt[data-name]').forEach(o => {
+    const m = !q || o.dataset.name.toLowerCase().includes(q);
+    o.classList.toggle('hidden', !m);
+    if (m) vis++;
+  });
+  document.getElementById('langNoResults').classList.toggle('show', vis === 0);
+}
+
+function showLangDropdown() { document.getElementById('langDropdown').style.display = 'block'; }
+function hideLangDropdown() {
+  document.getElementById('langDropdown').style.display = 'none';
+  document.getElementById('langSearchInput').value = '';
+  filterLangs('');
+}
+
+function toggleLangByName(name) {
+  if (selectedLangs.has(name)) {
+    selectedLangs.delete(name);
+  } else {
+    if (selectedLangs.size >= 3) return; // max 3
+    selectedLangs.add(name);
+  }
+  const opt = document.querySelector(`.lang-opt[data-name="${name}"]`);
+  if (opt) opt.classList.toggle('selected', selectedLangs.has(name));
+  document.getElementById('langMaxNote').classList.toggle('show', selectedLangs.size >= 3);
+  renderSelectedChips();
+  updatePreview();
+}
+
+function deselectLang(name) {
+  selectedLangs.delete(name);
+  const opt = document.querySelector(`.lang-opt[data-name="${name}"]`);
+  if (opt) opt.classList.remove('selected');
+  document.getElementById('langMaxNote').classList.remove('show');
+  renderSelectedChips();
+  updatePreview();
+}
+
+function renderSelectedChips() {
+  const wrap = document.getElementById('langSelectedChips');
+  wrap.innerHTML = '';
+  selectedLangs.forEach(name => {
+    const lang = ALL_LANGS.find(l => l.name === name);
+    const chip = document.createElement('span');
+    chip.className = 'lang-sel-chip';
+    chip.innerHTML = `${lang ? lang.flag : '🌐'} ${name} <span class="lang-sel-x" onclick="deselectLang('${name}')">×</span>`;
+    wrap.appendChild(chip);
+  });
+}
+
+/* ══════════════════════════
+   LEVEL MULTI-SELECT
+══════════════════════════ */
+const LEVEL_ORDER = ['A1','A2','B1','B2','C1','C2'];
+const selectedLevels = new Set(['B1','B2']);
+
+function toggleLevel(btn, level) {
+  if (level === 'All levels') {
+    // All levels = clear everything and select only "all"
+    if (selectedLevels.has('All levels')) {
+      selectedLevels.clear();
+      btn.classList.remove('on');
+    } else {
+      selectedLevels.clear();
+      LEVEL_ORDER.forEach(l => selectedLevels.delete(l));
+      selectedLevels.add('All levels');
+      // clear specific level buttons
+      LEVEL_ORDER.forEach(l => {
+        const b = document.getElementById('lvl' + l);
+        if (b) b.classList.remove('on');
+      });
+      btn.classList.add('on');
+    }
+  } else {
+    // deselect "All levels" if individual selected
+    if (selectedLevels.has('All levels')) {
+      selectedLevels.delete('All levels');
+      document.getElementById('lvlAll').classList.remove('on');
+    }
+    if (selectedLevels.has(level)) {
+      selectedLevels.delete(level);
+      btn.classList.remove('on');
+    } else {
+      selectedLevels.add(level);
+      btn.classList.add('on');
+    }
+  }
+  updatePreview();
+}
+
+function getLevelDisplay() {
+  if (selectedLevels.has('All levels') || selectedLevels.size === 0) return 'All levels';
+  // sort by LEVEL_ORDER
+  return LEVEL_ORDER.filter(l => selectedLevels.has(l)).join('/');
+}
+
+/* ══════════════════════════
+   TOPIC TAGS
+══════════════════════════ */
+const selectedTopics = new Set();
+function toggleTopic(btn, topic) {
+  if (selectedTopics.has(topic)) { selectedTopics.delete(topic); btn.classList.remove('on'); }
+  else { selectedTopics.add(topic); btn.classList.add('on'); }
+  updatePreview();
+}
+
+/* ══════════════════════════
+   TEACHER EXTRAS
+══════════════════════════ */
+let maxPeople = 20;
+function changeMax(d) {
+  maxPeople = Math.max(2, Math.min(200, maxPeople + d));
+  document.getElementById('maxVal').textContent = maxPeople;
+  updatePreview();
+}
+
+let priceMode = 'free';
+function selectPrice(mode) {
+  priceMode = mode;
+  document.getElementById('priceFree').classList.toggle('on', mode === 'free');
+  document.getElementById('pricePaid').classList.toggle('on', mode === 'paid');
+  document.getElementById('priceInputWrap').classList.toggle('show', mode === 'paid');
+  updatePreview();
+}
+
+/* ══════════════════════════
+   ADVANCED OPTIONS
+══════════════════════════ */
+function toggleAdv() {
+  const toggle = document.getElementById('advToggle');
+  const content = document.getElementById('advContent');
+  toggle.classList.toggle('open');
+  content.classList.toggle('show');
+}
+
+function toggleSchedule() {
+  document.getElementById('schedToggle').classList.toggle('on');
+  document.getElementById('schedFields').classList.toggle('show');
+  updateSubmitBtn();
+}
+
+function updateSubmitBtn() {
+  const sched = document.getElementById('schedToggle').classList.contains('on');
+  const btn = document.getElementById('submitBtn');
+  btn.innerHTML = sched
+    ? '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" fill="rgba(255,255,255,0.3)"/><path d="M5 8h6M8 5v6" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg> Schedule room'
+    : '<svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M3 8a5 5 0 1 0 10 0A5 5 0 0 0 3 8z" fill="rgba(255,255,255,0.3)"/><circle cx="8" cy="8" r="2" fill="white"/></svg> Go live now';
+}
+
+
+/* ══════════════════════════
+   LIVE PREVIEW
+══════════════════════════ */
+function onTitleInput(el) {
+  document.getElementById('titleCount').textContent = el.value.length;
+  updatePreview();
+}
+function onDescInput(el) {
+  document.getElementById('descCount').textContent = el.value.length;
+  updatePreview();
+}
+
+function updatePreview() {
+  const title = document.getElementById('titleInput').value.trim();
+  const desc = document.getElementById('descInput').value.trim();
+
+  // Title
+  const pvTitle = document.getElementById('pvTitle');
+  pvTitle.textContent = title || 'Your room title will appear here';
+  pvTitle.style.color = title ? 'var(--ink)' : 'var(--dim-2)';
+  pvTitle.style.fontWeight = title ? '600' : '400';
+
+  // Description
+  const pvDesc = document.getElementById('pvDesc');
+  if (desc) { pvDesc.textContent = desc; pvDesc.style.display = 'block'; }
+  else { pvDesc.style.display = 'none'; }
+
+  // Avatar (initials from first selected lang)
+  const langArr = Array.from(selectedLangs);
+  const firstLang = langArr[0] ? ALL_LANGS.find(l=>l.name===langArr[0]) : null;
+  const initials = langArr[0] ? langArr[0].substring(0,2).toUpperCase() : '?';
+  document.getElementById('pvAvatar').textContent = initials;
+
+  // Meta row
+  const metaRow = document.getElementById('pvMetaRow');
+  metaRow.innerHTML = '';
+
+  // Teacher tag
+  if (currentRole === 'teacher') {
+    const t = document.createElement('span');
+    t.className = 'tag teacher';
+    t.textContent = '🎓 Teacher';
+    metaRow.appendChild(t);
+  }
+
+  // Paid tag
+  if (currentRole === 'teacher' && priceMode === 'paid') {
+    const price = document.getElementById('priceInput').value;
+    const t = document.createElement('span');
+    t.className = 'tag paid';
+    t.textContent = price ? `$${parseFloat(price).toFixed(2)}` : '💳 Paid';
+    metaRow.appendChild(t);
+  }
+
+  // Languages (up to 3)
+  langArr.slice(0,3).forEach(name => {
+    const lang = ALL_LANGS.find(l=>l.name===name);
+    const t = document.createElement('span');
+    t.className = 'tag lang';
+    t.innerHTML = `<span class="flag">${lang ? lang.flag : '🌐'}</span> ${name}`;
+    metaRow.appendChild(t);
+  });
+
+  // Level
+  const lvlText = getLevelDisplay();
+  const lvlTag = document.createElement('span');
+  lvlTag.className = 'tag level';
+  lvlTag.textContent = lvlText;
+  metaRow.appendChild(lvlTag);
+
+  // Topic tags (up to 3)
+  Array.from(selectedTopics).slice(0,3).forEach(topic => {
+    const t = document.createElement('span');
+    t.className = 'tag topic';
+    t.textContent = topic;
+    metaRow.appendChild(t);
+  });
+
+  // Participant bar (teacher only)
+  const pvPaxBar = document.getElementById('pvPaxBar');
+  if (currentRole === 'teacher') {
+    pvPaxBar.style.display = 'flex';
+    document.getElementById('pvPaxLabel').textContent = `0 / ${maxPeople} joined`;
+    document.getElementById('pvPaxFill').style.width = '0%';
+  } else {
+    pvPaxBar.style.display = 'none';
+  }
+}
+
+/* ══════════════════════════
+   SUBMIT
+══════════════════════════ */
+function handleCreate() {
+  const btn = document.getElementById('submitBtn');
+  const orig = btn.innerHTML;
+  btn.innerHTML = '✓ Room created!';
+  btn.style.background = '#15803D';
+  btn.style.pointerEvents = 'none';
+  setTimeout(() => {
+    showView('rooms');
+    btn.innerHTML = orig; btn.style.background=''; btn.style.pointerEvents='';
+  }, 1600);
+}
+
+/* init */
+buildDropdown();
+updatePreview();
+</script>
+</body>
+</html>
