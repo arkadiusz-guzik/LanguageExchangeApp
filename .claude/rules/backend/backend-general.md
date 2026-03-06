@@ -1,6 +1,11 @@
+---
+paths: 
+    - "src/main/java/com/*"
+---
+
 # Project Rules
 
-See `.claude/rules/` for all project rules.
+See `.claude/rules/backend/` for all project rules.
 
 ## Tech Stack
 
