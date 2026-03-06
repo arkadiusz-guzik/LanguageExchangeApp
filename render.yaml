@@ -3,8 +3,8 @@ services:
     name: spring-backend
     runtime: docker
     # Path to your Spring Boot app inside the monorepo
-    dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerfilePath: ./backend/backend-api/Dockerfile
+    dockerContext: ./backend/backend-api
     plan: free
     healthCheckPath: /actuator/health
     envVars:
