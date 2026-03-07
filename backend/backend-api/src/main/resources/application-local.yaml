@@ -1,5 +1,22 @@
 spring:
   application:
     name: backend-api
-
-  
+  datasource:
+    url: jdbc:postgresql://localhost:5432/language-exchange-db
+    username: root
+    password: root
+    hikari:
+      connectionTimeout: 300
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jooq:
+    sql-dialect: postgres
+management:
+  endpoints.web.exposure.include: health
+  endpoint.health.show-details: never

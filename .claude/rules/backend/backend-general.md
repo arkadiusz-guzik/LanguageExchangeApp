@@ -9,7 +9,7 @@ See `.claude/rules/backend/` for all project rules.
 
 ## Tech Stack
 
-- Java 17, Spring Boot, Maven
+- Java 21, Spring Boot 4.1.0-M2, Maven
 - Lombok for boilerplate reduction
 - MapStruct for DTO/entity mapping uses manual Factory classes
 - JOOQ for query-side database access (CQRS reads)
@@ -127,4 +127,3 @@ Each module follows a consistent package structure:
 ## General Conventions
 - Use Lombok (`@RequiredArgsConstructor`, `@Getter`, `@Slf4j`, etc.) instead of manual boilerplate
 - Never use field injection (`@Autowired` on fields); use constructor injection via `@RequiredArgsConstructor`
-- Do not add code to the legacy `core`/`web` packages; new features belong in `modular`

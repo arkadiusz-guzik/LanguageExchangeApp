@@ -1,8 +1,22 @@
-spring.datasource.url: ${SPRING_DATASOURCE_URL}
-spring.datasource.username: ${SPRING_DATASOURCE_USERNAME}
-spring.datasource.password: ${SPRING_DATASOURCE_PASSWORD}
-spring.jpa.hibernate.ddl-auto: update
-spring.jpa.properties.hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
-
-management.endpoints.web.exposure.include: health
-management.endpoint.health.show-details: never
+spring:
+  application:
+    name: backend-api
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      connectionTimeout: 300
+      idleTimeout: 600000
+      maxLifetime: 1800000
+      driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jooq:
+    sql-dialect: postgres
+management:
+  endpoints.web.exposure.include: health
+  endpoint.health.show-details: never

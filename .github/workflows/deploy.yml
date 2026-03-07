@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [master]
 
 jobs:
   # ── Deploy Spring Boot to Render ────────────────────────────────────────────
@@ -21,16 +21,16 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend  # ← adjust to your React folder name
+        working-directory: ./frontend/frontend-ui  # ← adjust to your React folder name
     steps:
       - uses: actions/checkout@v4
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "25.8.0"
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: frontend/frontend-ui/package-lock.json
 
       - name: Install Vercel CLI
         run: npm install -g vercel

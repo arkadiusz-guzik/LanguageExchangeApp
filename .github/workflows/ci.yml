@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [master, development]
   pull_request:
-    branches: [main]
+    branches: [master]
 
 jobs:
   # ── Test Spring Boot ────────────────────────────────────────────────────────
@@ -13,11 +13,11 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./backend   # ← adjust to your Spring folder name
+        working-directory: ./backend/backend-api   # ← adjust to your Spring folder name
 
     services:
       postgres:
-        image: postgres:15
+        image: postgres:17
         env:
           POSTGRES_DB: testdb
           POSTGRES_USER: testuser
@@ -53,7 +53,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend  # ← adjust to your React folder name
+        working-directory: ./frontend/frontend-ui  # ← adjust to your React folder name
 
     steps:
       - uses: actions/checkout@v4
@@ -61,9 +61,9 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "25.8.0"
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: frontend/frontend-ui/package-lock.json
 
       - name: Install dependencies
         run: npm ci
